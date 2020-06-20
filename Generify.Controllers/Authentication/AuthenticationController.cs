@@ -16,11 +16,19 @@ namespace Generify.Controllers.Authentication
         }
 
         [HttpGet("callback")]
-        public async Task<IActionResult> Callback([FromQuery] string code, [FromQuery] string state)
+        public async Task<IActionResult> CallbackAsync([FromQuery] string code, [FromQuery] string state)
         {
             await _authService.SaveAccessTokenAsync(state, code);
 
-            return Ok(state);
+            return Redirect("https://www.google.de");
+        }
+
+        [HttpGet("login")]
+        public IActionResult Login()
+        {
+            var url = _authService.GetExternalLoginUrl("abc123");
+
+            return Redirect(url);
         }
     }
 }
