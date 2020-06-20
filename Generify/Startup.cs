@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Generify.Repositories;
+using Generify.Repositories.Extensions.DependencyInjection;
+using Generify.Services.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +30,18 @@ namespace Generify
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddGenerifyRepos(dbOptions =>
+            {
+                string connectionString = Configuration
+                    .GetSection("Generify")
+                    .GetValue<string>("Connection")
+                    .Replace("%APPDATA%", Configuration.GetValue<string>("APPDATA"));
+
+                dbOptions.UseSqlite(connectionString);
+            });
+
+            services.AddGenerifyServices();
+
             services.AddControllers();
         }
 
@@ -46,6 +63,12 @@ namespace Generify
             {
                 endpoints.MapControllers();
             });
+
+            using IServiceScope scope = app.ApplicationServices.CreateScope();
+
+            GenerifyDataContext context = scope.ServiceProvider.GetRequiredService<GenerifyDataContext>();
+
+            context.Database.EnsureCreated();
         }
     }
 }

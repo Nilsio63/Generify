@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using Generify.Models.Management;
+using Generify.Repositories.Interfaces.Management;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Generify.Controllers
 {
@@ -9,22 +9,21 @@ namespace Generify.Controllers
     [Route("api/[controller]")]
     public class ValuesController : ControllerBase
     {
-        public IActionResult Get()
-        {
-            var dir = Directory.GetCurrentDirectory();
-            var files = Directory.GetFiles(dir)
-                .Select(o => new
-                {
-                    name = o,
-                    content = System.IO.File.ReadAllText(o)
-                })
-                .ToArray();
+        private readonly IUserRepository _userRepository;
 
-            return Ok(new Dictionary<string, object>
+        public ValuesController(IUserRepository userRepository)
+        {
+            _userRepository = userRepository;
+        }
+
+        public async Task<IActionResult> Get()
+        {
+            await _userRepository.SaveAsync(new User
             {
-                ["directory"] = dir,
-                ["files"] = files
+                AccessToken = "123"
             });
+
+            return Ok();
         }
     }
 }

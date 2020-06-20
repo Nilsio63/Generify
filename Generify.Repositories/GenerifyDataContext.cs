@@ -11,5 +11,14 @@ namespace Generify.Repositories
             : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<User>(e =>
+            {
+                e.HasKey(o => o.Id);
+                e.Property(o => o.Id).ValueGeneratedOnAdd();
+            });
+        }
     }
 }
