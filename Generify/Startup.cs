@@ -1,22 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Generify.Controllers.Authentication;
+using Generify.Controllers.Extensions.DependencyInjection;
 using Generify.Repositories;
 using Generify.Repositories.Extensions.DependencyInjection;
 using Generify.Services.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Generify
 {
@@ -44,7 +35,7 @@ namespace Generify
 
             services.AddGenerifyServices();
 
-            services.AddControllers().PartManager.ApplicationParts.Add(new AssemblyPart(typeof(AuthenticationController).Assembly));
+            services.AddControllers().AddGenerifyControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

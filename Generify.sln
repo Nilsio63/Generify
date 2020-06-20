@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generify.Services.Extension
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generify.Controllers", "Generify.Controllers\Generify.Controllers.csproj", "{AF8CC164-FB73-431E-91E7-E7D59F94A8A7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generify.Controllers.Extensions.DependencyInjection", "Generify.Controllers.Extensions.DependencyInjection\Generify.Controllers.Extensions.DependencyInjection.csproj", "{6C89B161-41ED-4099-A2BF-B29857EF0D95}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{AF8CC164-FB73-431E-91E7-E7D59F94A8A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF8CC164-FB73-431E-91E7-E7D59F94A8A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF8CC164-FB73-431E-91E7-E7D59F94A8A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C89B161-41ED-4099-A2BF-B29857EF0D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C89B161-41ED-4099-A2BF-B29857EF0D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C89B161-41ED-4099-A2BF-B29857EF0D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C89B161-41ED-4099-A2BF-B29857EF0D95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
