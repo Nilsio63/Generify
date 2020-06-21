@@ -4,9 +4,11 @@ namespace Generify.Web
 {
     public static class WebMvcBuilderExtensions
     {
-        public static void AddGenerifyPages(this IMvcBuilder mvcBuilder)
+        public static IMvcBuilder AddGenerifyPages(this IMvcBuilder mvcBuilder)
         {
             mvcBuilder.AddApplicationPart(typeof(WebMvcBuilderExtensions).Assembly);
+
+            return mvcBuilder;
         }
     }
 }

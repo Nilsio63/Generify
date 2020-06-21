@@ -25,12 +25,18 @@ namespace Generify
         {
             services.AddGenerifyRepos(dbOptions =>
             {
-                string connectionString = Configuration
-                    .GetSection("Generify")
-                    .GetValue<string>("Connection")
-                    .Replace("%APPDATA%", Configuration.GetValue<string>("APPDATA"));
+                var conSection = Configuration.GetSection("Generify").GetSection("Connection");
 
-                dbOptions.UseSqlite(connectionString);
+                string accountEndpoint = conSection.GetValue<string>("Endpoint")
+                    .Replace("%GENERIFY_DB_ENDPOINT%", Configuration.GetValue<string>("GENERIFY_DB_ENDPOINT"));
+
+                string accountKey = conSection.GetValue<string>("AccountKey")
+                    .Replace("%GENERIFY_DB_ACCOUNT_KEY%", Configuration.GetValue<string>("GENERIFY_DB_ACCOUNT_KEY"));
+
+                string dbName = conSection.GetValue<string>("DataBase")
+                    .Replace("%GENERIFY_DB_DATABASE%", Configuration.GetValue<string>("GENERIFY_DB_DATABASE"));
+
+                dbOptions.UseCosmos(accountEndpoint, accountKey, dbName);
             });
 
             services.AddGenerifyServices();
@@ -73,6 +79,7 @@ namespace Generify
 
             GenerifyDataContext context = scope.ServiceProvider.GetRequiredService<GenerifyDataContext>();
 
+            context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
         }
     }
