@@ -2,6 +2,7 @@ using Generify.Controllers.Extensions.DependencyInjection;
 using Generify.Repositories;
 using Generify.Repositories.Extensions.DependencyInjection;
 using Generify.Services.Extensions.DependencyInjection;
+using Generify.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,8 @@ namespace Generify
             services.AddGenerifyServices();
 
             services.AddControllers().AddGenerifyControllers();
+
+            services.AddRazorPages().AddGenerifyPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,8 +48,15 @@ namespace Generify
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseGenerifyStaticFiles();
 
             app.UseRouting();
 
@@ -54,9 +64,14 @@ namespace Generify
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapRazorPages();
             });
 
+            CreateDataBase(app);
+        }
+
+        private void CreateDataBase(IApplicationBuilder app)
+        {
             using IServiceScope scope = app.ApplicationServices.CreateScope();
 
             GenerifyDataContext context = scope.ServiceProvider.GetRequiredService<GenerifyDataContext>();

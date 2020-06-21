@@ -15,13 +15,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Repositories", "Ge
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Repositories.Interfaces", "Generify.Repositories.Interfaces\Generify.Repositories.Interfaces.csproj", "{484F831C-42F1-4917-AF9C-97C23AE55C7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generify.Repositories.Extensions.DependencyInjection", "Generify.Repositories.Extensions.DependencyInjection\Generify.Repositories.Extensions.DependencyInjection.csproj", "{0A6AC9C2-29B7-4DA6-A45D-B02B22AEFFDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Repositories.Extensions.DependencyInjection", "Generify.Repositories.Extensions.DependencyInjection\Generify.Repositories.Extensions.DependencyInjection.csproj", "{0A6AC9C2-29B7-4DA6-A45D-B02B22AEFFDA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generify.Services.Extensions.DependencyInjection", "Generify.Services.Extensions.DependencyInjection\Generify.Services.Extensions.DependencyInjection.csproj", "{7C4D0BB1-0F0F-4668-A51F-8EC061968238}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Services.Extensions.DependencyInjection", "Generify.Services.Extensions.DependencyInjection\Generify.Services.Extensions.DependencyInjection.csproj", "{7C4D0BB1-0F0F-4668-A51F-8EC061968238}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generify.Controllers", "Generify.Controllers\Generify.Controllers.csproj", "{AF8CC164-FB73-431E-91E7-E7D59F94A8A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Controllers", "Generify.Controllers\Generify.Controllers.csproj", "{AF8CC164-FB73-431E-91E7-E7D59F94A8A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generify.Controllers.Extensions.DependencyInjection", "Generify.Controllers.Extensions.DependencyInjection\Generify.Controllers.Extensions.DependencyInjection.csproj", "{6C89B161-41ED-4099-A2BF-B29857EF0D95}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Controllers.Extensions.DependencyInjection", "Generify.Controllers.Extensions.DependencyInjection\Generify.Controllers.Extensions.DependencyInjection.csproj", "{6C89B161-41ED-4099-A2BF-B29857EF0D95}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Web", "Generify.Web\Generify.Web.csproj", "{005C78A1-AC91-4120-ABAF-27C597498DC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,6 +71,10 @@ Global
 		{6C89B161-41ED-4099-A2BF-B29857EF0D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C89B161-41ED-4099-A2BF-B29857EF0D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C89B161-41ED-4099-A2BF-B29857EF0D95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{005C78A1-AC91-4120-ABAF-27C597498DC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{005C78A1-AC91-4120-ABAF-27C597498DC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{005C78A1-AC91-4120-ABAF-27C597498DC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{005C78A1-AC91-4120-ABAF-27C597498DC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
