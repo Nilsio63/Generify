@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Generify.Controllers.Extensions.DependencyInjection\Generify.Controllers.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\Generify.Repositories.Extensions.DependencyInjection\Generify.Repositories.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\Generify.Services.Extensions.DependencyInjection\Generify.Services.Extensions.DependencyInjection.csproj" />
     <ProjectReference Include="..\Generify.Web\Generify.Web.csproj" />

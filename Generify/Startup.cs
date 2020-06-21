@@ -1,4 +1,3 @@
-using Generify.Controllers.Extensions.DependencyInjection;
 using Generify.Repositories;
 using Generify.Repositories.Extensions.DependencyInjection;
 using Generify.Services.Extensions.DependencyInjection;
@@ -35,8 +34,6 @@ namespace Generify
             });
 
             services.AddGenerifyServices();
-
-            services.AddControllers().AddGenerifyControllers();
 
             services.AddRazorPages().AddGenerifyPages();
         }
