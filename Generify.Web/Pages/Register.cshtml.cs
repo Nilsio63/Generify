@@ -51,6 +51,8 @@ namespace Generify.Web.Pages
 
             if (result.IsSuccess)
             {
+                TempData.Remove("UserName");
+
                 return RedirectToPage("./Index");
             }
             else

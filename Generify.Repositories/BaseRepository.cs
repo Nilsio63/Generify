@@ -49,6 +49,8 @@ namespace Generify.Repositories
         {
             objectList = objectList.ToArray();
 
+            BeforeSave(objectList);
+
             foreach (T obj in objectList)
             {
                 if (string.IsNullOrWhiteSpace(obj.Id))
@@ -64,6 +66,10 @@ namespace Generify.Repositories
             await DataContext.SaveChangesAsync();
 
             return objectList.ToList();
+        }
+
+        protected virtual void BeforeSave(IEnumerable<T> objectList)
+        {
         }
 
         public async Task DeleteRangeAsync(IEnumerable<T> objectList)

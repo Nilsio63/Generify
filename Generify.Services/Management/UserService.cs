@@ -54,7 +54,7 @@ namespace Generify.Services.Management
 
             var user = new User
             {
-                UserName = userName,
+                UserNameDisplay = userName,
                 PasswordHash = passwordHash
             };
 
