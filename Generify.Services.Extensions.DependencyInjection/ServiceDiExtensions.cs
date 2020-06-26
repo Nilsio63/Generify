@@ -13,7 +13,8 @@ namespace Generify.Services.Extensions.DependencyInjection
             return services
                 .AddTransient<IAuthenticationService, AuthenticationService>()
                 .AddTransient<IUserService, UserService>()
-                .AddTransient<IHashEncoder, Sha256Encoder>();
+                .AddTransient<IHashEncoder, Sha256Encoder>()
+                .AddTransient<IPasswordValidator, PasswordValidator>();
         }
     }
 }

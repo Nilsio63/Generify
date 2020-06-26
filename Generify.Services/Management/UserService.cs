@@ -9,12 +9,15 @@ namespace Generify.Services.Management
     public class UserService : IUserService
     {
         private readonly IHashEncoder _hashEncoder;
+        private readonly IPasswordValidator _passwordValidator;
         private readonly IUserRepository _userRepo;
 
         public UserService(IHashEncoder hashEncoder,
+            IPasswordValidator passwordValidator,
             IUserRepository userRepo)
         {
             _hashEncoder = hashEncoder;
+            _passwordValidator = passwordValidator;
             _userRepo = userRepo;
         }
 
@@ -30,6 +33,8 @@ namespace Generify.Services.Management
 
         public async Task<UserCreationResult> TryCreateUser(string userName, string password)
         {
+            userName = userName?.Trim();
+
             if (string.IsNullOrWhiteSpace(userName))
             {
                 return new UserCreationResult("The user name is required");
@@ -40,14 +45,11 @@ namespace Generify.Services.Management
                 return new UserCreationResult($"The user name {userName} is already taken");
             }
 
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                return new UserCreationResult("The password is required");
-            }
+            string pwError = _passwordValidator.ValidatePassword(password);
 
-            if (password.Length < 6)
+            if (!string.IsNullOrWhiteSpace(pwError))
             {
-                return new UserCreationResult("The password must contain at least 6 characters");
+                return new UserCreationResult(pwError);
             }
 
             byte[] passwordHash = _hashEncoder.EncodeToHash(password);
