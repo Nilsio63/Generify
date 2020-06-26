@@ -19,4 +19,8 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.1.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Generify.Services.Interfaces\Generify.Services.Interfaces.csproj" />
+  </ItemGroup>
+
 </Project>

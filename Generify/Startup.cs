@@ -79,7 +79,6 @@ namespace Generify
 
             GenerifyDataContext context = scope.ServiceProvider.GetRequiredService<GenerifyDataContext>();
 
-            context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
         }
     }

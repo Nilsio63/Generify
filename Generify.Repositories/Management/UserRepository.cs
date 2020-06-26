@@ -1,5 +1,7 @@
 ﻿using Generify.Models.Management;
 using Generify.Repositories.Interfaces.Management;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Generify.Repositories.Management
@@ -11,11 +13,16 @@ namespace Generify.Repositories.Management
         {
         }
 
-        public async Task SaveAsync(User user)
+        public async Task<User> GetByUserNameAsync(string userName)
         {
-            DataContext.Users.Add(user);
+            return await BaseSelect
+                .Where(o => o.UserName == userName)
+                .FirstOrDefaultAsync();
+        }
 
-            await DataContext.SaveChangesAsync();
+        public async Task<bool> IsUserNameTakenAsync(string userName)
+        {
+            return await GetByUserNameAsync(userName) != null;
         }
     }
 }

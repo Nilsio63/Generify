@@ -1,0 +1,42 @@
+﻿@page
+@model Generify.Web.Pages.RegisterModel
+@{
+}
+
+<form method="post">
+    <table>
+        <tr>
+            <td>
+                Username:
+            </td>
+            <td>
+                <input type="text" asp-for="UserName" /><br />
+            </td>
+            <td>
+                <span asp-validation-for="UserName"></span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Password:
+            </td>
+            <td>
+                <input type="password" asp-for="Password" /><br />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Repeat Password:
+            </td>
+            <td>
+                <input type="password" asp-for="PasswordRepeat" /><br />
+            </td>
+        </tr>
+    </table>
+    <input class="align-self-stretch" type="submit" value="Ok" />
+
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <br /><span style="color:red">@Request.Query["errorMessage"]</span>
+    }
+</form>

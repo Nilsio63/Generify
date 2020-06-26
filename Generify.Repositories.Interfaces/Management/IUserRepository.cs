@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Generify.Repositories.Interfaces.Management
 {
-    public interface IUserRepository
+    public interface IUserRepository : IBaseRepository<User>
     {
-        Task<User> GetByIdAsync(string id);
-        Task SaveAsync(User user);
+        Task<User> GetByUserNameAsync(string userName);
+        Task<bool> IsUserNameTakenAsync(string userName);
     }
 }

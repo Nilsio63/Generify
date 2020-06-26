@@ -22,7 +22,7 @@ namespace Generify.Repositories
             {
                 e.HasKey(o => o.Id);
                 e.Property(o => o.Id).ValueGeneratedOnAdd();
-                e.Property(o => o.AccountName).IsRequired();
+                e.Property(o => o.UserName).IsRequired();
                 e.Property(o => o.PasswordHash).IsRequired();
                 e.Property(o => o.AccessToken).IsRequired(false);
             });

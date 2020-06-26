@@ -4,6 +4,7 @@
     {
         Album,
         Artist,
+        Library,
         Playlist,
         Track
     }
