@@ -1,42 +1,32 @@
 ﻿@page
 @model Generify.Web.Pages.RegisterModel
 @{
+    ViewData["Title"] = "Sign up";
 }
+<h1>@ViewData["Title"]</h1>
 
-<form method="post">
-    <table>
-        <tr>
-            <td>
-                Username:
-            </td>
-            <td>
-                <input type="text" asp-for="UserName" /><br />
-            </td>
-            <td>
-                <span asp-validation-for="UserName"></span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Password:
-            </td>
-            <td>
-                <input type="password" asp-for="Password" /><br />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Repeat Password:
-            </td>
-            <td>
-                <input type="password" asp-for="PasswordRepeat" /><br />
-            </td>
-        </tr>
-    </table>
-    <input class="align-self-stretch" type="submit" value="Ok" />
+<div class="text-left">
+    <p>
+        Enter a unique <i>(and cool)</i> user name and password to sign up!
+    </p>
+
+    <div class="form-container">
+        <form method="post">
+            <label for="userName">Username:</label>
+            <input id="userName" type="text" asp-for="UserName" /><br />
+
+            <label for="password">Password:</label>
+            <input id="password" type="password" asp-for="Password" /><br />
+
+            <label for="passwordRepeat">Repeat Password:</label>
+            <input id="passwordRepeat" type="password" asp-for="PasswordRepeat" /><br />
+
+            <input type="submit" value="Ok" />
+        </form>
+    </div>
 
     @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
     {
         <br /><span style="color:red">@Request.Query["errorMessage"]</span>
     }
-</form>
+</div>
