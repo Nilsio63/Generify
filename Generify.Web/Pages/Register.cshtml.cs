@@ -1,9 +1,12 @@
 using Generify.Models.Management;
 using Generify.Services.Interfaces.Management;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Generify.Web.Pages
@@ -31,15 +34,27 @@ namespace Generify.Web.Pages
 
         public IActionResult OnGet(string errorMessage)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("./Index");
+            }
+
             ErrorMessage = errorMessage;
 
             UserName = TempData.TryGetValue("UserName", out object userName) ? userName?.ToString() : null;
+
+            TempData.Remove("UserName");
 
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToPage("./Index");
+            }
+
             TempData["UserName"] = UserName;
 
             if (!string.Equals(Password, PasswordRepeat, StringComparison.Ordinal))
@@ -51,7 +66,12 @@ namespace Generify.Web.Pages
 
             if (result.IsSuccess)
             {
-                TempData.Remove("UserName");
+                var identity = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, result.CreatedUser.Id)
+                }, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                await Request.HttpContext.SignInAsync(new ClaimsPrincipal(identity));
 
                 return RedirectToPage("./Index");
             }

@@ -27,6 +27,6 @@
 
     @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
     {
-        <br /><span style="color:red">@Request.Query["errorMessage"]</span>
+        <br /><span class="text-danger">@Request.Query["errorMessage"]</span>
     }
 </div>

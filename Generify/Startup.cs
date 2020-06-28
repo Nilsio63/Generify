@@ -41,7 +41,7 @@ namespace Generify
 
             services.AddGenerifyServices();
 
-            services.AddRazorPages().AddGenerifyPages();
+            services.AddGenerifyPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -63,6 +63,7 @@ namespace Generify
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
