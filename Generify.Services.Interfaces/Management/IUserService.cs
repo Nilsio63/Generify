@@ -5,7 +5,7 @@ namespace Generify.Services.Interfaces.Management
 {
     public interface IUserService
     {
-        Task<User> GetByUserNameAsync(string userName);
+        Task<User> GetByLoginAsync(string userName, string password);
 
         Task<UserCreationResult> TryCreateUser(string userName, string password);
         Task<User> SaveAsync(User user);

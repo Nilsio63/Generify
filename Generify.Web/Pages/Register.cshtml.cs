@@ -1,12 +1,10 @@
 using Generify.Models.Management;
 using Generify.Services.Interfaces.Management;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Generify.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Generify.Web.Pages
@@ -14,6 +12,7 @@ namespace Generify.Web.Pages
     public class RegisterModel : PageModel
     {
         private readonly ILogger<RegisterModel> _logger;
+        private readonly IUserAuthService _userAuthService;
         private readonly IUserService _userService;
 
         [BindProperty]
@@ -26,9 +25,11 @@ namespace Generify.Web.Pages
         public string ErrorMessage { get; private set; }
 
         public RegisterModel(ILogger<RegisterModel> logger,
+            IUserAuthService userAuthService,
             IUserService userService)
         {
             _logger = logger;
+            _userAuthService = userAuthService;
             _userService = userService;
         }
 
@@ -66,12 +67,9 @@ namespace Generify.Web.Pages
 
             if (result.IsSuccess)
             {
-                var identity = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, result.CreatedUser.Id)
-                }, CookieAuthenticationDefaults.AuthenticationScheme);
+                TempData.Remove("UserName");
 
-                await Request.HttpContext.SignInAsync(new ClaimsPrincipal(identity));
+                await _userAuthService.LoginAsync(result.CreatedUser);
 
                 return RedirectToPage("./Index");
             }

@@ -21,9 +21,25 @@ namespace Generify.Services.Management
             _userRepo = userRepo;
         }
 
-        public async Task<User> GetByUserNameAsync(string userName)
+        public async Task<User> GetByLoginAsync(string userName, string password)
         {
-            return await _userRepo.GetByUserNameAsync(userName);
+            if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
+            {
+                return null;
+            }
+
+            User user = await _userRepo.GetByUserNameAsync(userName);
+
+            byte[] passwordHash = _hashEncoder.EncodeToHash(password);
+
+            if (Equals(user.PasswordHash, passwordHash))
+            {
+                return user;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<bool> IsUserNameTakenAsync(string userName)

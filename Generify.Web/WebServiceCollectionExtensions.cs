@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Generify.Web.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -24,7 +25,10 @@ namespace Generify.Web
                     options.ExpireTimeSpan = TimeSpan.FromDays(120);
                 });
 
-            return services;
+            services.AddTransient<IUserAuthService, UserAuthService>();
+
+            return services.AddHttpContextAccessor()
+                .AddTransient<IUserAuthService, UserAuthService>();
         }
     }
 }
