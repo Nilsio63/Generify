@@ -81,7 +81,7 @@ ol.text-center {
 }
 
 .form-container {
-    width: 350px;
+    max-width: 350px;
     clear: both;
 }
 
@@ -94,6 +94,8 @@ ol.text-center {
     .form-container input {
         width: 100%;
         clear: both;
+        border-radius: 0px;
+        border-width: 1px;
     }
 
     .form-container input[type=submit] {
