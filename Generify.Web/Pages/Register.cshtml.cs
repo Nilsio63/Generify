@@ -56,8 +56,6 @@ namespace Generify.Web.Pages
                 return RedirectToPage("./Index");
             }
 
-            TempData["UserName"] = UserName;
-
             if (!string.Equals(Password, PasswordRepeat, StringComparison.Ordinal))
             {
                 return RedirectToPage(new { errorMessage = "Password didn't match password repetition" });
@@ -67,14 +65,14 @@ namespace Generify.Web.Pages
 
             if (result.IsSuccess)
             {
-                TempData.Remove("UserName");
-
                 await _userAuthService.LoginAsync(result.CreatedUser);
 
                 return RedirectToPage("./Index");
             }
             else
             {
+                TempData["UserName"] = UserName;
+
                 return RedirectToPage(new { errorMessage = result.ErrorMessage });
             }
         }

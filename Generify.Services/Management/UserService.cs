@@ -2,6 +2,7 @@
 using Generify.Repositories.Interfaces.Management;
 using Generify.Services.Interfaces.Management;
 using Generify.Services.Interfaces.Security;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Generify.Services.Management
@@ -30,9 +31,14 @@ namespace Generify.Services.Management
 
             User user = await _userRepo.GetByUserNameAsync(userName);
 
+            if (user == null)
+            {
+                return null;
+            }
+
             byte[] passwordHash = _hashEncoder.EncodeToHash(password);
 
-            if (Equals(user.PasswordHash, passwordHash))
+            if (user.PasswordHash.SequenceEqual(passwordHash))
             {
                 return user;
             }

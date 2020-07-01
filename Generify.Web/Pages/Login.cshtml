@@ -6,5 +6,25 @@
 <h1>@ViewData["Title"]</h1>
 
 <div class="text-left">
-    <p>This is where the login page would be ... if we had any!</p>
+    <p>
+        Use your user name and password to login!<br />
+        If you forgot your user name or password, well ... that's not really my problem, isn't it?
+    </p>
+
+    <div class="form-container">
+        <form method="post">
+            <label for="userName">User name:</label>
+            <input id="userName" type="text" asp-for="UserName" /><br />
+
+            <label for="password">Password:</label>
+            <input id="password" type="password" asp-for="Password" /><br />
+
+            <input type="submit" value="Login" />
+        </form>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <br /><span class="text-danger">@Model.ErrorMessage</span>
+    }
 </div>
