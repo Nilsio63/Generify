@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Generify.Repositories.Interfaces
+namespace Generify.Repositories.Abstractions
 {
     public interface IBaseRepository<T>
         where T : Entity

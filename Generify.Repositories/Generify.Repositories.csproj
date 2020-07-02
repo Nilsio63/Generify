@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Generify.Repositories.Interfaces\Generify.Repositories.Interfaces.csproj" />
+    <ProjectReference Include="..\Generify.Repositories.Abstractions\Generify.Repositories.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

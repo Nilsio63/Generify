@@ -1,4 +1,4 @@
-﻿using Generify.Repositories.Interfaces.Management;
+﻿using Generify.Repositories.Abstractions.Management;
 using Generify.Repositories.Management;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

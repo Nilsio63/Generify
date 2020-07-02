@@ -1,6 +1,6 @@
 ﻿using Generify.Models.Management;
-using Generify.Repositories.Interfaces.Management;
-using Generify.Services.Interfaces.Management;
+using Generify.Repositories.Abstractions.Management;
+using Generify.Services.Abstractions.Management;
 using SpotifyAPI.Web;
 using System;
 using System.Threading.Tasks;

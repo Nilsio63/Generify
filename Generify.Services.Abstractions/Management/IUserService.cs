@@ -1,7 +1,7 @@
 ﻿using Generify.Models.Management;
 using System.Threading.Tasks;
 
-namespace Generify.Services.Interfaces.Management
+namespace Generify.Services.Abstractions.Management
 {
     public interface IUserService
     {

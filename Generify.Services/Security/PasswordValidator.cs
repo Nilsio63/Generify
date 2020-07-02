@@ -1,4 +1,4 @@
-﻿using Generify.Services.Interfaces.Security;
+﻿using Generify.Services.Abstractions.Security;
 using System.Collections.Generic;
 using System.Linq;
 

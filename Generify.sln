@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify", "Generify\Generify.csproj", "{E263BB14-57EA-495C-9DB0-AB5700B66EFF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Services.Interfaces", "Generify.Services.Interfaces\Generify.Services.Interfaces.csproj", "{DC566433-1D04-497C-A863-DDEB9CC44BE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Services.Abstractions", "Generify.Services.Abstractions\Generify.Services.Abstractions.csproj", "{DC566433-1D04-497C-A863-DDEB9CC44BE8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Models", "Generify.Models\Generify.Models.csproj", "{6A2EEDFF-D091-4096-A2F4-0D19FD6EC6AC}"
 EndProject
@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Services", "Generi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Repositories", "Generify.Repositories\Generify.Repositories.csproj", "{2F129F31-FCCA-4DDE-8465-A823BE423A9D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Repositories.Interfaces", "Generify.Repositories.Interfaces\Generify.Repositories.Interfaces.csproj", "{484F831C-42F1-4917-AF9C-97C23AE55C7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Repositories.Abstractions", "Generify.Repositories.Abstractions\Generify.Repositories.Abstractions.csproj", "{484F831C-42F1-4917-AF9C-97C23AE55C7C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Repositories.Extensions.DependencyInjection", "Generify.Repositories.Extensions.DependencyInjection\Generify.Repositories.Extensions.DependencyInjection.csproj", "{0A6AC9C2-29B7-4DA6-A45D-B02B22AEFFDA}"
 EndProject

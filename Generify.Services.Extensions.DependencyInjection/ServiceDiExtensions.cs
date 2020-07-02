@@ -1,5 +1,5 @@
-﻿using Generify.Services.Interfaces.Management;
-using Generify.Services.Interfaces.Security;
+﻿using Generify.Services.Abstractions.Management;
+using Generify.Services.Abstractions.Security;
 using Generify.Services.Management;
 using Generify.Services.Security;
 using Microsoft.Extensions.DependencyInjection;

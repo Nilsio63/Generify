@@ -1,5 +1,5 @@
 using Generify.Models.Management;
-using Generify.Services.Interfaces.Management;
+using Generify.Services.Abstractions.Management;
 using Generify.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

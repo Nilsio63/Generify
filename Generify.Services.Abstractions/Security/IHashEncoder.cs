@@ -1,4 +1,4 @@
-﻿namespace Generify.Services.Interfaces.Security
+﻿namespace Generify.Services.Abstractions.Security
 {
     public interface IHashEncoder
     {

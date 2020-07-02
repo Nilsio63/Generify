@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Generify.Services.Interfaces\Generify.Services.Interfaces.csproj" />
+    <ProjectReference Include="..\Generify.Services.Abstractions\Generify.Services.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

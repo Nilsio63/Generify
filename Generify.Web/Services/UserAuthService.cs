@@ -1,5 +1,5 @@
 ﻿using Generify.Models.Management;
-using Generify.Services.Interfaces.Management;
+using Generify.Services.Abstractions.Management;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;

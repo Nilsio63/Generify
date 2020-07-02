@@ -1,5 +1,5 @@
 ﻿using Generify.Models.Management;
-using Generify.Repositories.Interfaces.Management;
+using Generify.Repositories.Abstractions.Management;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;

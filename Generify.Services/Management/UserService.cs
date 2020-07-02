@@ -1,7 +1,7 @@
 ﻿using Generify.Models.Management;
-using Generify.Repositories.Interfaces.Management;
-using Generify.Services.Interfaces.Management;
-using Generify.Services.Interfaces.Security;
+using Generify.Repositories.Abstractions.Management;
+using Generify.Services.Abstractions.Management;
+using Generify.Services.Abstractions.Security;
 using System.Linq;
 using System.Threading.Tasks;
 

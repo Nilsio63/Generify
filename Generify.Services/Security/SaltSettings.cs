@@ -1,4 +1,4 @@
-﻿using Generify.Services.Interfaces.Security;
+﻿using Generify.Services.Abstractions.Security;
 using System.Text;
 
 namespace Generify.Services.Security
