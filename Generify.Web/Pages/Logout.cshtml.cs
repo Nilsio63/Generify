@@ -18,12 +18,12 @@ namespace Generify.Web.Pages
         {
             if (!User.Identity.IsAuthenticated)
             {
-                return RedirectToPage("./Index");
+                return Page();
             }
 
             await _userAuthService.LogoutAsync();
 
-            return Page();
+            return RedirectToPage();
         }
     }
 }
