@@ -39,7 +39,13 @@ namespace Generify
                 dbOptions.UseCosmos(accountEndpoint, accountKey, dbName);
             });
 
-            services.AddGenerifyServices();
+            string saltString = Configuration
+                .GetSection("Generify")
+                .GetSection("Encoding")
+                .GetValue<string>("Salt")
+                .Replace("%GENERIFY_PASSWORD_SALT%", Configuration.GetValue<string>("GENERIFY_PASSWORD_SALT"));
+
+            services.AddGenerifyServices(saltString);
 
             services.AddGenerifyPages();
         }
