@@ -1,14 +1,13 @@
 ﻿@page
-@model Generify.Web.Pages.LoginModel
+@model Generify.Web.Pages.Authentication.RegisterModel
 @{
-    ViewData["Title"] = "Login";
+    ViewData["Title"] = "Sign up";
 }
 <h1>@ViewData["Title"]</h1>
 
 <div class="text-left">
     <p>
-        Use your user name and password to login!<br />
-        If you forgot your user name or password, well ... that's not really my problem, isn't it?
+        Enter a unique <i>(and cool)</i> user name and password to sign up to Generify!
     </p>
 
     <div class="form-container">
@@ -19,7 +18,10 @@
             <label for="password">Password:</label>
             <input id="password" type="password" asp-for="Password" /><br />
 
-            <input type="submit" value="Login" />
+            <label for="passwordRepeat">Repeat Password:</label>
+            <input id="passwordRepeat" type="password" asp-for="PasswordRepeat" /><br />
+
+            <input type="submit" value="Register" />
         </form>
     </div>
 

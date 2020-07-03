@@ -10,7 +10,14 @@ namespace Generify.Web
     {
         public static IServiceCollection AddGenerifyPages(this IServiceCollection services)
         {
-            services.AddRazorPages().AddApplicationPart(typeof(WebServiceCollectionExtensions).Assembly);
+            services.AddRazorPages()
+                .AddApplicationPart(typeof(WebServiceCollectionExtensions).Assembly)
+                .AddRazorPagesOptions(opt =>
+                {
+                    opt.Conventions.AddPageRoute("/Authentication/Login", "/Login");
+                    opt.Conventions.AddPageRoute("/Authentication/Logout", "/Logout");
+                    opt.Conventions.AddPageRoute("/Authentication/Register", "/Register");
+                });
 
             services
                 .AddAuthentication(options =>
@@ -21,7 +28,7 @@ namespace Generify.Web
                 })
                 .AddCookie(options =>
                 {
-                    options.LoginPath = new PathString("/Index");
+                    options.LoginPath = new PathString("/Authentication/Login");
                     options.ExpireTimeSpan = TimeSpan.FromDays(120);
                 });
 

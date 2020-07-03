@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
-namespace Generify.Web.Pages
+namespace Generify.Web.Pages.Authentication
 {
     public class RegisterModel : PageModel
     {
@@ -37,7 +37,7 @@ namespace Generify.Web.Pages
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToPage("./Index");
+                return RedirectToPage("/Index");
             }
 
             ErrorMessage = errorMessage;
@@ -53,7 +53,7 @@ namespace Generify.Web.Pages
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToPage("./Index");
+                return RedirectToPage("/Index");
             }
 
             if (!string.Equals(Password, PasswordRepeat, StringComparison.Ordinal))
@@ -67,7 +67,7 @@ namespace Generify.Web.Pages
             {
                 await _userAuthService.LoginAsync(result.CreatedUser);
 
-                return RedirectToPage("./Index");
+                return RedirectToPage("/Index");
             }
             else
             {

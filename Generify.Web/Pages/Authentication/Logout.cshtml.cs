@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Threading.Tasks;
 
-namespace Generify.Web.Pages
+namespace Generify.Web.Pages.Authentication
 {
     public class LogoutModel : PageModel
     {
