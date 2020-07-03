@@ -1,4 +1,5 @@
-﻿using Generify.Web.Services;
+﻿using Generify.Web.Conventions;
+using Generify.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,9 +15,7 @@ namespace Generify.Web
                 .AddApplicationPart(typeof(WebServiceCollectionExtensions).Assembly)
                 .AddRazorPagesOptions(opt =>
                 {
-                    opt.Conventions.AddPageRoute("/Authentication/Login", "/Login");
-                    opt.Conventions.AddPageRoute("/Authentication/Logout", "/Logout");
-                    opt.Conventions.AddPageRoute("/Authentication/Register", "/Register");
+                    opt.Conventions.Add(new FolderlessPageRouteModelConvention());
                 });
 
             services
