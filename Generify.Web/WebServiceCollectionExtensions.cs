@@ -1,4 +1,5 @@
 ﻿using Generify.Web.Conventions;
+using Generify.Web.Filters;
 using Generify.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
@@ -11,11 +12,16 @@ namespace Generify.Web
     {
         public static IServiceCollection AddGenerifyPages(this IServiceCollection services)
         {
-            services.AddRazorPages()
+            services
+                .AddRazorPages()
                 .AddApplicationPart(typeof(WebServiceCollectionExtensions).Assembly)
                 .AddRazorPagesOptions(opt =>
                 {
                     opt.Conventions.Add(new FolderlessPageRouteModelConvention());
+                })
+                .AddMvcOptions(opt =>
+                {
+                    opt.Filters.Add<ExternalAuthFilter>();
                 });
 
             services

@@ -5,6 +5,8 @@ namespace Generify.Web.Services
 {
     public interface IUserAuthService
     {
+        Task<User> GetCurrentUserAsync();
+
         Task<string> TryLoginAsync(string userName, string password);
         Task LoginAsync(User user);
 

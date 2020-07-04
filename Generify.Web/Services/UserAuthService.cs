@@ -3,6 +3,7 @@ using Generify.Services.Abstractions.Management;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -21,6 +22,22 @@ namespace Generify.Web.Services
             _authOptions = authOptions;
             _httpContextAccessor = httpContextAccessor;
             _userService = userService;
+        }
+
+        public async Task<User> GetCurrentUserAsync()
+        {
+            ClaimsPrincipal httpUser = _httpContextAccessor.HttpContext.User;
+
+            if (!httpUser.Identity.IsAuthenticated)
+            {
+                return null;
+            }
+
+            string userName = httpUser.Claims.FirstOrDefault(o => o.Type == ClaimTypes.Name)?.Value;
+
+            User user = await _userService.GetByIdAsync(userName);
+
+            return user;
         }
 
         public async Task<string> TryLoginAsync(string userName, string password)
