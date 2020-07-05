@@ -13,8 +13,6 @@ namespace Generify.Repositories.Extensions.DependencyInjection
             return services
                 .AddDbContext<GenerifyDataContext>(dbOptions =>
                 {
-                    dbOptions.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-
                     dbOptionsAction.Invoke(dbOptions);
                 })
                 .AddTransient<IUserRepository, UserRepository>();

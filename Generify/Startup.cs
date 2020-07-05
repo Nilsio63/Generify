@@ -1,6 +1,7 @@
 using Generify.Repositories;
 using Generify.Repositories.Extensions.DependencyInjection;
 using Generify.Services.Extensions.DependencyInjection;
+using Generify.Services.Management;
 using Generify.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -45,7 +46,16 @@ namespace Generify
                 .GetValue<string>("Salt")
                 .Replace("%GENERIFY_PASSWORD_SALT%", Configuration.GetValue<string>("GENERIFY_PASSWORD_SALT"));
 
-            services.AddGenerifyServices(saltString);
+            services.AddGenerifyServices(saltString, s =>
+            {
+                string clientId = Configuration
+                    .GetSection("Generify")
+                    .GetSection("External")
+                    .GetValue<string>("ClientId")
+                    .Replace("%GENERIFY_CLIENT_ID%", Configuration.GetValue<string>("GENERIFY_CLIENT_ID"));
+
+                return new ExternalAuthSettings(clientId, "https://localhost:44383/AuthCallback");
+            });
 
             services.AddGenerifyPages();
         }
