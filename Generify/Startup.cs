@@ -5,6 +5,7 @@ using Generify.Services.Management;
 using Generify.Web;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,13 +49,17 @@ namespace Generify
 
             services.AddGenerifyServices(saltString, s =>
             {
+                HttpContext context = s.GetRequiredService<IHttpContextAccessor>().HttpContext;
+
+                string hostAddress = context.Request.Host.ToUriComponent().ToString();
+
                 string clientId = Configuration
                     .GetSection("Generify")
                     .GetSection("External")
                     .GetValue<string>("ClientId")
                     .Replace("%GENERIFY_CLIENT_ID%", Configuration.GetValue<string>("GENERIFY_CLIENT_ID"));
 
-                return new ExternalAuthSettings(clientId, "https://localhost:44383/AuthCallback");
+                return new ExternalAuthSettings(clientId, $"https://{hostAddress}/AuthCallback");
             });
 
             services.AddGenerifyPages();
