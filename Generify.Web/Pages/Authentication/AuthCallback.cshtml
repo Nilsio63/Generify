@@ -1,8 +1,36 @@
 ﻿@page
 @model Generify.Web.Pages.Authentication.AuthCallbackModel
 @{
+    if (string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        ViewData["Title"] = "Authentication granted";
+    }
+    else
+    {
+        ViewData["Title"] = "Authentication denied";
+    }
 }
 
 <div>
     <h1>@ViewData["Title"]</h1>
+
+    @if (string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <p>
+            Congratulations! You managed to press on a button!<br />
+            Your Generify and Spotify accounts are now linked, meaning you will be able to generate some awesome playlists very soon!
+        </p>
+    }
+    else
+    {
+        <p>
+            Something went wrong in the authentication process with Spotify.<br />
+            Might be a Spotify problem or you pressed the wrong button ...<br />
+            My guess: Probably your fault!
+        </p>
+        <p class="text-danger">
+            <b>Error message:</b><br />
+            @Model.ErrorMessage
+        </p>
+    }
 </div>

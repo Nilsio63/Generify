@@ -21,7 +21,7 @@ namespace Generify.Web.Filters
 
         public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
         {
-            if (context.HttpContext.Request.Path.Value.Contains("AuthNeeded"))
+            if (context.HttpContext.Request.Path.Value.Contains("AuthNeeded") || context.HttpContext.Request.Path.Value.Contains("AuthCallback"))
             {
                 return;
             }
