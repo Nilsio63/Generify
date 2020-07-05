@@ -7,9 +7,20 @@
 <div>
     <h1>@ViewData["Title"]</h1>
 
-    <p>Authentication to Spotify services is needed!</p>
+    <p>
+        Authentication to Spotify services is needed!
+    </p>
 
     <p>
-        To authenticate to the Spotify services, visit this <a href="@Model.ExternalAuthLink">link</a>.
+        For Generify to work it needs to access your Spotify data.<br />
+        To authenticate to the Spotify services, press the <i>Authenticate</i> button below.<br />
+        You will be redirected to Spotify to let them know, that you trust us.<br />
+        I am just a random website on the internet, sure you can trust me.
     </p>
+
+    <div class="form-container">
+        <form method="post">
+            <input type="submit" value="Authenticate" />
+        </form>
+    </div>
 </div>
