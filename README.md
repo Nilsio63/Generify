@@ -4,7 +4,9 @@ Website to automate generation of Spotify playlists.
 
 ## Website
 
-The website is currently **under construction** but can be visited [here](https://generify.azurewebsites.net).
+The website is currently **under construction** but can be visited [here](https://generify.azurewebsites.net).  
+Please note that the site could take up to 30s to boot up because of the free Azure Service Plan which doesn't involve always-on functionality.  
+Some time in the future I will change that *(might just host it somewhere else)* but first I need to get this project going!
 
 ## Dependencies
 
