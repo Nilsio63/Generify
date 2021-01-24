@@ -59,7 +59,13 @@ namespace Generify
                     .GetValue<string>("ClientId")
                     .Replace("%GENERIFY_CLIENT_ID%", Configuration.GetValue<string>("GENERIFY_CLIENT_ID"));
 
-                return new ExternalAuthSettings(clientId, $"https://{hostAddress}/AuthCallback");
+                string clientSecret = Configuration
+                    .GetSection("Generify")
+                    .GetSection("External")
+                    .GetValue<string>("ClientSected")
+                    .Replace("%GENERIFY_CLIENT_SECRET%", Configuration.GetValue<string>("GENERIFY_CLIENT_SECRET"));
+
+                return new ExternalAuthSettings(clientId, clientSecret, $"https://{hostAddress}/AuthCallback");
             });
 
             services.AddGenerifyPages();
