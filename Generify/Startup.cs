@@ -62,7 +62,7 @@ namespace Generify
                 string clientSecret = Configuration
                     .GetSection("Generify")
                     .GetSection("External")
-                    .GetValue<string>("ClientSected")
+                    .GetValue<string>("ClientSecret")
                     .Replace("%GENERIFY_CLIENT_SECRET%", Configuration.GetValue<string>("GENERIFY_CLIENT_SECRET"));
 
                 return new ExternalAuthSettings(clientId, clientSecret, $"https://{hostAddress}/AuthCallback");
