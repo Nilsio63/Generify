@@ -28,7 +28,7 @@ namespace Generify.Web.Filters
 
             User user = await _userAuthService.GetCurrentUserAsync();
 
-            if (user != null && string.IsNullOrWhiteSpace(user.AccessToken))
+            if (user != null && string.IsNullOrWhiteSpace(user.RefreshToken))
             {
                 context.HttpContext.Response.Redirect("/AuthNeeded");
             }

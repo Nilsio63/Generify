@@ -27,7 +27,7 @@ namespace Generify.Services.Management
                 LoginRequest.ResponseType.Code)
             {
                 State = userId,
-                Scope = new[] { Scopes.UserLibraryRead, Scopes.UserFollowRead, Scopes.PlaylistModifyPrivate, Scopes.PlaylistModifyPublic }
+                Scope = new[] { Scopes.UserTopRead, Scopes.UserReadEmail, Scopes.UserLibraryRead, Scopes.UserFollowRead, Scopes.PlaylistModifyPrivate, Scopes.PlaylistModifyPublic }
             };
 
             return r.ToUri().ToString();
@@ -38,7 +38,10 @@ namespace Generify.Services.Management
             User user = await _userRepo.GetByIdAsync(userId)
                 ?? throw new KeyNotFoundException($"Could not find user with id '{userId}'!");
 
-            user.AccessToken = accessToken;
+            AuthorizationCodeTokenResponse response = await new OAuthClient().RequestToken(
+                new AuthorizationCodeTokenRequest(_externalAuthSettings.ClientId, _externalAuthSettings.ClientSecret, accessToken, new Uri(_externalAuthSettings.CallbackUrl)));
+
+            user.RefreshToken = response.RefreshToken;
 
             await _userRepo.SaveAsync(user);
         }

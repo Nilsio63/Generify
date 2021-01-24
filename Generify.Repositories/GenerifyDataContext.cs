@@ -25,7 +25,7 @@ namespace Generify.Repositories
                 e.Property(o => o.UserNameInternal).IsRequired();
                 e.Property(o => o.UserNameDisplay).IsRequired();
                 e.Property(o => o.PasswordHash).IsRequired();
-                e.Property(o => o.AccessToken).IsRequired(false);
+                e.Property(o => o.RefreshToken).IsRequired(false);
             });
 
             modelBuilder.Entity<PlaylistDefinition>(e =>

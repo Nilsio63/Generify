@@ -8,7 +8,7 @@ namespace Generify.Models.Management
         public string UserNameInternal { get; set; }
         public string UserNameDisplay { get; set; }
         public byte[] PasswordHash { get; set; }
-        public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
 
         public List<PlaylistDefinition> PlaylistDefinitions { get; set; }
     }
