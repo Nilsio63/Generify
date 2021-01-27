@@ -22,9 +22,9 @@ namespace Generify.Services.Management
             _userRepo = userRepo;
         }
 
-        public async Task<User> GetByIdAsync(string userName)
+        public async Task<User> GetByIdAsync(string userId)
         {
-            return await _userRepo.GetByIdAsync(userName);
+            return await _userRepo.GetByIdAsync(userId);
         }
 
         public async Task<User> GetByLoginAsync(string userName, string password)

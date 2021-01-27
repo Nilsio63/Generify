@@ -33,9 +33,9 @@ namespace Generify.Web.Services
                 return null;
             }
 
-            string userName = httpUser.Claims.FirstOrDefault(o => o.Type == ClaimTypes.Name)?.Value;
+            string userId = httpUser.Claims.FirstOrDefault(o => o.Type == ClaimTypes.Name)?.Value;
 
-            User user = await _userService.GetByIdAsync(userName);
+            User user = await _userService.GetByIdAsync(userId);
 
             return user;
         }
