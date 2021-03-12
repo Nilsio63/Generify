@@ -1,20 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
+﻿using Generify.Models.Management;
+using Generify.Web.Services;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Threading.Tasks;
 
 namespace Generify.Web.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly IUserAuthService _userAuthService;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        public User GenerifyUser { get; set; }
+
+        public IndexModel(IUserAuthService userAuthService)
         {
-            _logger = logger;
+            _userAuthService = userAuthService;
         }
 
-        public void OnGet()
+        public async Task OnGet()
         {
-
+            GenerifyUser = await _userAuthService.GetCurrentUserAsync();
         }
     }
 }

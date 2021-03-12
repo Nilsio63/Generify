@@ -5,7 +5,14 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome to Generify</h1>
+    @if (Model.GenerifyUser != null)
+    {
+        <h1 class="display-4">Welcome to Generify, @Model.GenerifyUser.UserNameDisplay</h1>
+    }
+    else
+    {
+        <h1 class="display-4">Welcome to Generify</h1>
+    }
     <p>The website to automatically generate your next Spotify playlist <i>(or at least try to)</i></p>
 
     <p>Because this is a <b>WORK IN PROGRESS</b> website, there are some things left to do:</p>
