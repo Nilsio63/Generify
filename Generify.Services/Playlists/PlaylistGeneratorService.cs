@@ -63,6 +63,8 @@ namespace Generify.Services.Playlists
 
             List<FullTrack> sourceTracks = await GetFromSources(playlistDefinition, client);
 
+            sourceTracks = Sort(playlistDefinition, sourceTracks);
+
             FullPlaylist targetPlaylist = await client.Playlists.Get(playlistDefinition.TargetPlaylistId);
 
             string snapShotId = targetPlaylist.SnapshotId;
@@ -104,6 +106,8 @@ namespace Generify.Services.Playlists
                 .Concat(toAdd)
                 .ToList();
 
+            int counter = 0;
+
             while (true)
             {
                 var reorders = targetTracks
@@ -138,6 +142,51 @@ namespace Generify.Services.Playlists
                 targetTracks = targetTracks
                     .Move(item.OldIndex, 1, item.NewIndex)
                     .ToList();
+
+                counter++;
+            }
+        }
+
+        private List<FullTrack> Sort(PlaylistDefinition playlistDefinition, IEnumerable<FullTrack> trackList)
+        {
+            foreach (OrderInstruction item in playlistDefinition.OrderInstructions)
+            {
+                switch (item.OrderType)
+                {
+                    case PlaylistOrderType.AlbumName:
+                        trackList = GenericSort(trackList, o => o.Album.Name, item.OrderDirection);
+                        break;
+                    case PlaylistOrderType.ArtistName:
+                        trackList = GenericSort(trackList, o => o.Artists.First().Name, item.OrderDirection);
+                        break;
+                    case PlaylistOrderType.Title:
+                        trackList = GenericSort(trackList, o => o.Name, item.OrderDirection);
+                        break;
+                    case PlaylistOrderType.TrackNr:
+                        trackList = GenericSort(trackList, o => o.DiscNumber, item.OrderDirection);
+                        trackList = GenericSort(trackList, o => o.TrackNumber, item.OrderDirection);
+                        break;
+                    default:
+                        throw new NotSupportedException($"Order type '{item.OrderType}' is not supported!");
+                }
+            }
+
+            return trackList.ToList();
+        }
+
+        private IEnumerable<FullTrack> GenericSort<T>(IEnumerable<FullTrack> trackList, Func<FullTrack, T> sortSelector, PlaylistOrderDirection orderDirection)
+        {
+            OrderByDirection direction = orderDirection == PlaylistOrderDirection.Descending
+                ? OrderByDirection.Descending
+                : OrderByDirection.Ascending;
+
+            if (trackList is IOrderedEnumerable<FullTrack> ordered)
+            {
+                return ordered.ThenBy(sortSelector, direction);
+            }
+            else
+            {
+                return trackList.OrderBy(sortSelector, direction);
             }
         }
 
@@ -151,8 +200,6 @@ namespace Generify.Services.Playlists
 
             return all
                 .DistinctBy(o => o.Id)
-                .OrderBy(o => o.Name.Length)
-                .ThenBy(o => o.Name)
                 .ToList();
         }
 
