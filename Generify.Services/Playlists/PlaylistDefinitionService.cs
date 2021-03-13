@@ -2,6 +2,7 @@
 using Generify.Repositories.Abstractions.Playlists;
 using Generify.Services.Abstractions.Playlists;
 using Generify.Services.Internal.Interfaces;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Generify.Services.Playlists
@@ -27,7 +28,34 @@ namespace Generify.Services.Playlists
                 return;
             }
 
+            await _playlistDefinitionRepo.LoadDetailsAsync(playlistDef);
+
             await _playlistGenerator.ExecuteGenerationAsync(playlistDef);
+        }
+
+        public async Task SaveAsync(PlaylistDefinition playlistDefinition)
+        {
+            playlistDefinition.PlaylistSources = playlistDefinition.PlaylistSources?
+                .OrderBy(o => o.OrderNr)
+                .Select((o, i) =>
+                {
+                    o.OrderNr = i + 1;
+
+                    return o;
+                })
+                .ToList();
+
+            playlistDefinition.OrderInstructions = playlistDefinition.OrderInstructions?
+                .OrderBy(o => o.OrderNr)
+                .Select((o, i) =>
+                {
+                    o.OrderNr = i + 1;
+
+                    return o;
+                })
+                .ToList();
+
+            await _playlistDefinitionRepo.SaveAsync(playlistDefinition);
         }
     }
 }
