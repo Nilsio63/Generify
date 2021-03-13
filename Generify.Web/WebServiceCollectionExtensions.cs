@@ -37,8 +37,6 @@ namespace Generify.Web
                     options.ExpireTimeSpan = TimeSpan.FromDays(120);
                 });
 
-            services.AddTransient<IUserAuthService, UserAuthService>();
-
             return services.AddHttpContextAccessor()
                 .AddTransient<IUserAuthService, UserAuthService>();
         }
