@@ -1,5 +1,8 @@
 ﻿using Generify.Services.Abstractions.Management;
+using Generify.Services.Abstractions.Playlists;
 using Generify.Services.Abstractions.Security;
+using Generify.Services.Internal;
+using Generify.Services.Internal.Interfaces;
 using Generify.Services.Management;
 using Generify.Services.Playlists;
 using Generify.Services.Security;
@@ -36,7 +39,7 @@ namespace Generify.Services.Extensions.DependencyInjection
         {
             return services
                 .AddTransient<IExternalAuthService, ExternalAuthService>()
-                .AddTransient<IPlaylistGeneratorService, PlaylistGeneratorService>()
+                .AddTransient<IPlaylistGenerator, PlaylistGenerator>()
                 .AddTransient<ISpotifyClientFactory, SpotifyClientFactory>()
                 .AddTransient<IUserService, UserService>();
         }

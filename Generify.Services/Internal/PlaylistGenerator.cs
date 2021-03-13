@@ -1,6 +1,6 @@
 ﻿using Generify.Models.Enums;
 using Generify.Models.Playlists;
-using Generify.Services.Abstractions.Management;
+using Generify.Services.Internal.Interfaces;
 using MoreLinq;
 using SpotifyAPI.Web;
 using System;
@@ -8,49 +8,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Generify.Services.Playlists
+namespace Generify.Services.Internal
 {
-    public interface ISpotifyClientFactory
-    {
-        Task<ISpotifyClient> CreateClientAsync(string refreshToken);
-    }
-
-    public class SpotifyClientFactory : ISpotifyClientFactory
-    {
-        private readonly IExternalAuthSettings _externalAuthSettings;
-
-        public SpotifyClientFactory(IExternalAuthSettings externalAuthSettings)
-        {
-            _externalAuthSettings = externalAuthSettings;
-        }
-
-        public async Task<ISpotifyClient> CreateClientAsync(string refreshToken)
-        {
-            if (string.IsNullOrWhiteSpace(refreshToken))
-            {
-                throw new ArgumentException($"'{nameof(refreshToken)}' cannot be null or whitespace", nameof(refreshToken));
-            }
-
-            AuthorizationCodeRefreshResponse codeRefreshResponse = await new OAuthClient().RequestToken(new AuthorizationCodeRefreshRequest(_externalAuthSettings.ClientId, _externalAuthSettings.ClientSecret, refreshToken));
-
-            SpotifyClientConfig clientConfig = SpotifyClientConfig
-                .CreateDefault()
-                .WithToken(codeRefreshResponse.AccessToken);
-
-            return new SpotifyClient(clientConfig);
-        }
-    }
-
-    public interface IPlaylistGeneratorService
-    {
-        Task ExecuteGenerationAsync(PlaylistDefinition playlistDefinition);
-    }
-
-    public class PlaylistGeneratorService : IPlaylistGeneratorService
+    public class PlaylistGenerator : IPlaylistGenerator
     {
         private readonly ISpotifyClientFactory _spotifyClientFactory;
 
-        public PlaylistGeneratorService(ISpotifyClientFactory spotifyClientFactory)
+        public PlaylistGenerator(ISpotifyClientFactory spotifyClientFactory)
         {
             _spotifyClientFactory = spotifyClientFactory;
         }
