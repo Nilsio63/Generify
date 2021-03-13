@@ -1,5 +1,7 @@
 ﻿using Generify.Repositories.Abstractions.Management;
+using Generify.Repositories.Abstractions.Playlists;
 using Generify.Repositories.Management;
+using Generify.Repositories.Playlists;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -15,6 +17,7 @@ namespace Generify.Repositories.Extensions.DependencyInjection
                 {
                     dbOptionsAction.Invoke(dbOptions);
                 })
+                .AddTransient<IPlaylistDefinitionRepository, PlaylistDefinitionRepository>()
                 .AddTransient<IUserRepository, UserRepository>();
         }
     }
