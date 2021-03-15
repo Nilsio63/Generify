@@ -19,31 +19,31 @@
             <Authorized>
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="/logout" @onclick="LogoutAsync">
-                        <span class="oi oi-plus" aria-hidden="true"></span> Logout
+                        <span class="oi oi-account-logout" aria-hidden="true"></span> Logout
                     </NavLink>
                 </li>
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="playlists">
-                        <span class="oi oi-plus" aria-hidden="true"></span> My Playlists
+                        <span class="oi oi-musical-note" aria-hidden="true"></span> My Playlists
                     </NavLink>
                 </li>
             </Authorized>
             <NotAuthorized>
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="login">
-                        <span class="oi oi-plus" aria-hidden="true"></span> Login
+                        <span class="oi oi-account-login" aria-hidden="true"></span> Login
                     </NavLink>
                 </li>
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="register">
-                        <span class="oi oi-plus" aria-hidden="true"></span> Sign up
+                        <span class="oi oi-key" aria-hidden="true"></span> Sign up
                     </NavLink>
                 </li>
             </NotAuthorized>
         </AuthorizeView>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="/about">
-                <span class="oi oi-home" aria-hidden="true"></span> About
+                <span class="oi oi-book" aria-hidden="true"></span> About
             </NavLink>
         </li>
     </ul>
