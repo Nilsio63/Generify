@@ -2,6 +2,7 @@
 using Generify.Repositories.Abstractions.Playlists;
 using Generify.Services.Abstractions.Playlists;
 using Generify.Services.Internal.Interfaces;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,6 +18,11 @@ namespace Generify.Services.Playlists
         {
             _playlistGenerator = playlistGenerator;
             _playlistDefinitionRepo = playlistDefinitionRepo;
+        }
+
+        public async Task<List<PlaylistDefinition>> GetAllByUserIdAsync(string userId)
+        {
+            return await _playlistDefinitionRepo.GetAllByUserIdAsync(userId);
         }
 
         public async Task ExecuteGenerationAsync(string playlistDefinitionId)

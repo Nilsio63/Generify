@@ -18,7 +18,7 @@ namespace Generify.Repositories.Playlists
         public async Task<List<PlaylistDefinition>> GetAllByUserIdAsync(string userId)
         {
             return await BaseSelect
-                .Where(o => o.User.Id == userId)
+                .Where(o => o.UserId == userId)
                 .ToListAsync();
         }
 

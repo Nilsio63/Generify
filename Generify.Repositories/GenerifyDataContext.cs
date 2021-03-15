@@ -33,8 +33,9 @@ namespace Generify.Repositories
                 e.HasKey(o => o.Id);
                 e.Property(o => o.Id).ValueGeneratedOnAdd();
                 e.Property(o => o.TargetPlaylistId).IsRequired();
+                e.Property(o => o.UserId).IsRequired();
 
-                e.HasOne(o => o.User).WithMany(o => o.PlaylistDefinitions).IsRequired();
+                e.HasOne(o => o.User).WithMany(o => o.PlaylistDefinitions).HasForeignKey(o => o.UserId).IsRequired();
             });
 
             modelBuilder.Entity<PlaylistSource>(e =>
