@@ -1,0 +1,67 @@
+﻿@page "/login"
+@inject IUserAuthService _userAuthService
+@inject NavigationManager _navManager
+
+<h1>Login</h1>
+
+<div class="text-left">
+    <AuthorizeView>
+        <Authorized>
+            <p>
+                You are already logged in!<br />
+                What are you doing here?
+            </p>
+        </Authorized>
+        <NotAuthorized>
+            <p>
+                Use your user name and password to login!<br />
+                If you forgot your user name or password, well ... that's not really my problem, isn't it?
+            </p>
+
+            <div class="form-container">
+                <EditForm Model="this" Context="auth" OnSubmit="@LoginAsync">
+                    <label for="userName">User name:</label>
+                    <InputText id="userName" @bind-Value="UserName" /><br />
+
+                    <label for="password">Password:</label>
+                    <InputText id="password" type="password" @bind-Value="Password" /><br />
+
+                    <input type="submit" value="Login" />
+                </EditForm>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(_errorMessage))
+            {
+                <br /><span class="text-danger">@_errorMessage</span>
+            }
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
+
+@code {
+    private string _errorMessage = null;
+
+    public string UserName { get; set; }
+    public string Password { get; set; }
+
+    private async Task LoginAsync()
+    {
+        if (await _userAuthService.IsUserLoggedInAsync())
+        {
+            _navManager.NavigateTo("/");
+
+            return;
+        }
+
+        string error = await _userAuthService.TryLoginAsync(UserName, Password);
+
+        if (string.IsNullOrWhiteSpace(error))
+        {
+            _navManager.NavigateTo("/");
+        }
+        else
+        {
+            _errorMessage = error;
+        }
+    }
+}

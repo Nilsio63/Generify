@@ -1,0 +1,52 @@
+﻿@page "/authCallback"
+@using Microsoft.AspNetCore.WebUtilities
+@inject NavigationManager _navManager
+@inject IExternalAuthService _externalAuthService
+
+<div class="text-left">
+    @if (string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <h1>Authentication granted</h1>
+
+        <p>
+            Congratulations! You managed to press on a button!<br />
+            Your Generify and Spotify accounts are now linked, meaning you will be able to generate some awesome playlists very soon!
+        </p>
+    }
+    else
+    {
+        <h1>Authentication denied</h1>
+
+        <p>
+            Something went wrong in the authentication process with Spotify.<br />
+            Might be a Spotify problem or you pressed the wrong button ...<br />
+            My guess: Probably your fault!
+        </p>
+        <p class="text-danger">
+            <b>Error message:</b><br />
+            @ErrorMessage
+        </p>
+    }
+</div>
+
+@code {
+    public string ErrorMessage { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Uri uri = _navManager.ToAbsoluteUri(_navManager.Uri);
+
+        string state = QueryHelpers.ParseQuery(uri.Query).TryGetValue("state", out var s) ? s.First() : null;
+        string code = QueryHelpers.ParseQuery(uri.Query).TryGetValue("code", out var c) ? c.First() : null;
+        string error = QueryHelpers.ParseQuery(uri.Query).TryGetValue("error", out var e) ? e.First() : null;
+
+        if (string.IsNullOrWhiteSpace(error))
+        {
+            await _externalAuthService.SaveAccessTokenAsync(state, code);
+        }
+        else
+        {
+            ErrorMessage = error;
+        }
+    }
+}
