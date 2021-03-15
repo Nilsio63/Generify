@@ -1,11 +1,12 @@
-using Generify.Repositories;
+using Blazored.LocalStorage;
+using Generify.Services;
 using Generify.Repositories.Extensions.DependencyInjection;
 using Generify.Services.Extensions.DependencyInjection;
 using Generify.Services.Management;
-using Generify.Web;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,7 @@ namespace Generify
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGenerifyRepos(dbOptions =>
@@ -49,9 +51,9 @@ namespace Generify
 
             services.AddGenerifyServices(saltString, s =>
             {
-                HttpContext context = s.GetRequiredService<IHttpContextAccessor>().HttpContext;
+                NavigationManager navManager = s.GetRequiredService<NavigationManager>();
 
-                string hostAddress = context.Request.Host.ToUriComponent().ToString();
+                string hostAddress = navManager.BaseUri.ToString().Replace("https://", "").TrimEnd('/');
 
                 string clientId = Configuration
                     .GetSection("Generify")
@@ -65,10 +67,18 @@ namespace Generify
                     .GetValue<string>("ClientSecret")
                     .Replace("%GENERIFY_CLIENT_SECRET%", Configuration.GetValue<string>("GENERIFY_CLIENT_SECRET"));
 
-                return new ExternalAuthSettings(clientId, clientSecret, $"https://{hostAddress}/AuthCallback");
+                return new ExternalAuthSettings(clientId, clientSecret, $"https://{hostAddress}/authCallback");
             });
 
-            services.AddGenerifyPages();
+            services.AddRazorPages();
+            services.AddServerSideBlazor();
+            services.AddBlazoredLocalStorage();
+            services.AddHttpContextAccessor();
+
+            services.AddTransient<IUserAuthService, UserAuthService>();
+
+            services.AddScoped<IGenerifyAuthenticationStateProvider, GenerifyAuthenticationStateProvider>();
+            services.AddScoped(s => (AuthenticationStateProvider)s.GetRequiredService<IGenerifyAuthenticationStateProvider>());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,12 +91,12 @@ namespace Generify
             else
             {
                 app.UseExceptionHandler("/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseGenerifyStaticFiles();
 
             app.UseRouting();
 
@@ -95,19 +105,9 @@ namespace Generify
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapBlazorHub();
+                endpoints.MapFallbackToPage("/_Host");
             });
-
-            CreateDataBase(app);
-        }
-
-        private void CreateDataBase(IApplicationBuilder app)
-        {
-            using IServiceScope scope = app.ApplicationServices.CreateScope();
-
-            GenerifyDataContext context = scope.ServiceProvider.GetRequiredService<GenerifyDataContext>();
-
-            context.Database.EnsureCreated();
         }
     }
 }
