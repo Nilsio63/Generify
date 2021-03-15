@@ -1,0 +1,46 @@
+﻿@page "/playlists"
+@attribute [Authorize]
+@inject IUserAuthService _userAuthService
+@inject IPlaylistDefinitionService _playlistDefService
+@inject IPlaylistOverviewService _playlistOverviewService
+
+<h1>My Playlists</h1>
+
+<LoadingComponent IsLoading="PlaylistDefinitions is null">
+    @foreach (PlaylistOverview playlist in PlaylistDefinitions)
+    {
+        <p>
+            <b>@playlist.Name</b><br />
+            <i>@playlist.Description</i>
+        </p>
+
+        <LoadingComponent IsLoading="playlist.IsGenerating" LoadingText="Generating your playlist...">
+            <input type="submit" @onclick="() => ExecuteAsync(playlist)" value="Generate" />
+        </LoadingComponent>
+    }
+</LoadingComponent>
+
+@code {
+    public List<PlaylistOverview> PlaylistDefinitions { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        User user = await _userAuthService.GetCurrentUserAsync();
+
+        PlaylistDefinitions = await _playlistOverviewService.GetAllByUserIdAsync(user.Id);
+    }
+
+    public async Task ExecuteAsync(PlaylistOverview playlist)
+    {
+        playlist.IsGenerating = true;
+
+        try
+        {
+            await _playlistDefService.ExecuteGenerationAsync(playlist.Definition.Id);
+        }
+        finally
+        {
+            playlist.IsGenerating = false;
+        }
+    }
+}
