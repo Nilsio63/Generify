@@ -40,6 +40,8 @@ namespace Generify.Services.Extensions.DependencyInjection
             return services
                 .AddTransient<IExternalAuthService, ExternalAuthService>()
                 .AddTransient<IPlaylistGenerator, PlaylistGenerator>()
+                .AddTransient<IPlaylistSyncWorker, PlaylistSyncWorker>()
+                .AddTransient<IPlaylistGenerationContextBuilder, PlaylistGenerationContextBuilder>()
                 .AddTransient<ISpotifyClientFactory, SpotifyClientFactory>()
                 .AddTransient<IPlaylistDefinitionService, PlaylistDefinitionService>()
                 .AddTransient<IPlaylistOverviewService, PlaylistOverviewService>()
