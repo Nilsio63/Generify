@@ -26,7 +26,7 @@ namespace Generify.Services.Internal
 
             PrivateUser user = await client.UserProfile.Current();
 
-            List<FullTrack> sourceTracks = await GetFromSources(playlistDefinition, client);
+            List<FullTrack> sourceTracks = await GetFromSourcesAsync(playlistDefinition, client);
 
             sourceTracks = Sort(playlistDefinition, sourceTracks);
 
@@ -89,30 +89,90 @@ namespace Generify.Services.Internal
             }
         }
 
-        private async Task<List<FullTrack>> GetFromSources(PlaylistDefinition playlistDefinition, ISpotifyClient client)
+        private async Task<List<FullTrack>> GetFromSourcesAsync(PlaylistDefinition playlistDefinition, ISpotifyClient client)
         {
-            List<FullTrack> all = await playlistDefinition.PlaylistSources
+            var sourceList = await playlistDefinition.PlaylistSources
                 .ToAsyncEnumerable()
-                .SelectAwait(async o => await GetFromSource(o, client))
-                .SelectMany(o => o.ToAsyncEnumerable())
+                .OrderBy(o => o.OrderNr)
+                .SelectAwait(async o => new
+                {
+                    o.InclusionType,
+                    Tracks = await GetFromSourceAsync(o, client)
+                })
                 .ToListAsync();
+
+            IEnumerable<FullTrack> all = new List<FullTrack>();
+
+            foreach (var source in sourceList)
+            {
+                all = source.InclusionType switch
+                {
+                    InclusionType.Include => all.Concat(source.Tracks),
+                    InclusionType.Exclude => all.Except(source.Tracks),
+                    _ => throw new NotSupportedException($"Inclusion type '{source.InclusionType}' is not supported!"),
+                };
+            }
 
             return all
                 .DistinctBy(o => o.Id)
                 .ToList();
         }
 
-        private async Task<List<FullTrack>> GetFromSource(PlaylistSource source, ISpotifyClient client)
+        private async Task<List<FullTrack>> GetFromSourceAsync(PlaylistSource source, ISpotifyClient client)
         {
             return source.SourceType switch
             {
-                SourceType.Library => await GetFromLibrary(client),
-                SourceType.Album => await GetFromAlbum(source, client),
+                SourceType.Album => await GetFromAlbumAsync(source, client),
+                SourceType.Artist => await GetFromArtistAsync(source, client),
+                SourceType.Library => await GetFromLibraryAsync(client),
+                SourceType.Playlist => await GetFromPlaylistAsync(source, client),
+                SourceType.Track => await GetFromTrackAsync(source, client),
                 _ => throw new NotSupportedException($"Source type '{source.SourceType}' is not supported!"),
             };
         }
 
-        private static async Task<List<FullTrack>> GetFromLibrary(ISpotifyClient client)
+        private async Task<List<FullTrack>> GetFromAlbumAsync(PlaylistSource source, ISpotifyClient client)
+        {
+            Paging<SimpleTrack> albumPaginate = await client.Albums.GetTracks(source.SourceId);
+
+            List<SimpleTrack> tracksFromAlbum = await client.Paginate(albumPaginate).ToListAsync();
+
+            return await tracksFromAlbum
+                .Batch(50)
+                .ToAsyncEnumerable()
+                .SelectAwait(async o => await client.Tracks.GetSeveral(new TracksRequest(o.Select(p => p.Id).ToList())))
+                .SelectMany(o => o.Tracks.ToAsyncEnumerable())
+                .ToListAsync();
+        }
+
+        private async Task<List<FullTrack>> GetFromArtistAsync(PlaylistSource source, ISpotifyClient client)
+        {
+            Paging<SimpleAlbum> albumPaginate = await client.Artists.GetAlbums(source.SourceId);
+
+            List<SimpleAlbum> simpleAlbumList = await client.Paginate(albumPaginate)
+                .ToListAsync();
+
+            List<FullAlbum> fullAlbumList = await simpleAlbumList
+                .Batch(20)
+                .ToAsyncEnumerable()
+                .SelectAwait(async o => await client.Albums.GetSeveral(new AlbumsRequest(o.Select(p => p.Id).ToList())))
+                .SelectMany(o => o.Albums.ToAsyncEnumerable())
+                .ToListAsync();
+
+            List<SimpleTrack> simpleTrackList = await fullAlbumList
+                .ToAsyncEnumerable()
+                .SelectMany(o => client.Paginate(o.Tracks))
+                .ToListAsync();
+
+            return await simpleTrackList
+                .Batch(50)
+                .ToAsyncEnumerable()
+                .SelectAwait(async o => await client.Tracks.GetSeveral(new TracksRequest(o.Select(p => p.Id).ToList())))
+                .SelectMany(o => o.Tracks.ToAsyncEnumerable())
+                .ToListAsync();
+        }
+
+        private async Task<List<FullTrack>> GetFromLibraryAsync(ISpotifyClient client)
         {
             Paging<SavedTrack> libPaginate = await client.Library.GetTracks();
 
@@ -121,15 +181,21 @@ namespace Generify.Services.Internal
                 .ToListAsync();
         }
 
-        private static async Task<List<FullTrack>> GetFromAlbum(PlaylistSource source, ISpotifyClient client)
+        private async Task<List<FullTrack>> GetFromPlaylistAsync(PlaylistSource source, ISpotifyClient client)
         {
-            Paging<SimpleTrack> albumPaginate = await client.Albums.GetTracks(source.SourceId);
+            Paging<PlaylistTrack<IPlayableItem>> playlistPaginate = await client.Playlists.GetItems(source.SourceId);
 
-            List<SimpleTrack> tracksFromAlbum = await client.Paginate(albumPaginate).ToListAsync();
+            return await client.Paginate(playlistPaginate)
+                .Select(o => o.Track)
+                .OfType<FullTrack>()
+                .ToListAsync();
+        }
 
-            TracksResponse res = await client.Tracks.GetSeveral(new TracksRequest(tracksFromAlbum.Select(o => o.Id).ToList()));
+        private async Task<List<FullTrack>> GetFromTrackAsync(PlaylistSource source, ISpotifyClient client)
+        {
+            FullTrack track = await client.Tracks.Get(source.SourceId);
 
-            return res.Tracks;
+            return new List<FullTrack> { track };
         }
     }
 }
