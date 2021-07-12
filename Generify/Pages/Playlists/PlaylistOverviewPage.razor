@@ -16,6 +16,11 @@
 
         <LoadingComponent IsLoading="playlist.IsGenerating" LoadingText="Generating your playlist...">
             <input type="submit" @onclick="() => ExecuteAsync(playlist)" value="Generate" />
+
+            @if (!string.IsNullOrWhiteSpace(playlist.ErrorMessage))
+            {
+                <br /><span class="text-danger">@playlist.ErrorMessage</span>
+            }
         </LoadingComponent>
     }
 </LoadingComponent>
@@ -33,10 +38,15 @@
     public async Task ExecuteAsync(PlaylistOverview playlist)
     {
         playlist.IsGenerating = true;
+        playlist.ErrorMessage = null;
 
         try
         {
             await _playlistDefService.ExecuteGenerationAsync(playlist.Definition.Id);
+        }
+        catch (Exception ex)
+        {
+            playlist.ErrorMessage = ex.Message;
         }
         finally
         {
