@@ -1,5 +1,6 @@
 ﻿@page "/playlists"
 @attribute [Authorize]
+@inject NavigationManager _navManager
 @inject IUserAuthService _userAuthService
 @inject IPlaylistDefinitionService _playlistDefService
 @inject IPlaylistOverviewService _playlistOverviewService
@@ -17,9 +18,7 @@
         <LoadingComponent IsLoading="playlist.IsGenerating" LoadingText="Generating your playlist...">
             <input type="submit" @onclick="() => ExecuteAsync(playlist)" value="Generate" />
 
-            <a href="/playlists/edit/@playlist.Definition.Id">
-                <input type="button" value="Edit" />
-            </a>
+            <input type="button" value="Edit" @onclick="() => EditPlaylistAsync(playlist.Definition)" />
 
             @if (!string.IsNullOrWhiteSpace(playlist.ErrorMessage))
             {
@@ -62,5 +61,12 @@
         {
             playlist.IsGenerating = false;
         }
+    }
+
+    public async Task EditPlaylistAsync(PlaylistDefinition playlist)
+    {
+        await _playlistDefService.LoadDetailsAsync(playlist);
+
+        _navManager.NavigateTo($"/playlists/edit/{playlist.Id}");
     }
 }

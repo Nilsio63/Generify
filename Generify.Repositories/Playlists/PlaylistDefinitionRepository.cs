@@ -37,6 +37,9 @@ namespace Generify.Repositories.Playlists
             await entry.Reference(o => o.User).LoadAsync();
             await entry.Collection(o => o.PlaylistSources).LoadAsync();
             await entry.Collection(o => o.OrderInstructions).LoadAsync();
+
+            playlistDefinition.PlaylistSources = playlistDefinition.PlaylistSources.OrderBy(o => o.OrderNr).ToList();
+            playlistDefinition.OrderInstructions = playlistDefinition.OrderInstructions.OrderBy(o => o.OrderNr).ToList();
         }
     }
 }
