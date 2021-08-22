@@ -41,6 +41,13 @@ ol.text-center {
         border-width: 1px;
     }
 
+    .form-container select {
+        width: 100%;
+        clear: both;
+        border-radius: 0px;
+        border-width: 1px;
+    }
+
         .form-container input[type=submit] {
             margin-top: 20px;
         }

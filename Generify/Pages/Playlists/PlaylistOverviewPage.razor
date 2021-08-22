@@ -17,12 +17,22 @@
         <LoadingComponent IsLoading="playlist.IsGenerating" LoadingText="Generating your playlist...">
             <input type="submit" @onclick="() => ExecuteAsync(playlist)" value="Generate" />
 
+            <a href="/playlists/edit/@playlist.Definition.Id">
+                <input type="button" value="Edit" />
+            </a>
+
             @if (!string.IsNullOrWhiteSpace(playlist.ErrorMessage))
             {
                 <br /><span class="text-danger">@playlist.ErrorMessage</span>
             }
         </LoadingComponent>
     }
+
+    <div class="align-bottom">
+        <a href="/playlists/create">
+            <input type="button" value="Create new" />
+        </a>
+    </div>
 </LoadingComponent>
 
 @code {

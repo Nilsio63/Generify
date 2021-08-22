@@ -22,6 +22,14 @@ namespace Generify.Repositories.Playlists
                 .ToListAsync();
         }
 
+        public async Task<PlaylistDefinition> GetByIdForUserAsync(string playlistId, string userId)
+        {
+            return await BaseSelect
+                .Where(o => o.Id == playlistId
+                    && o.UserId == userId)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task LoadDetailsAsync(PlaylistDefinition playlistDefinition)
         {
             EntityEntry<PlaylistDefinition> entry = DataContext.Entry(playlistDefinition);

@@ -1,0 +1,40 @@
+﻿@page "/playlists/edit/{playlistId}"
+@attribute [Authorize]
+@inject IUserAuthService _userAuthService
+@inject IPlaylistDefinitionService _playlistDefService
+
+<h3>Edit playlist definition</h3>
+
+<LoadingComponent IsLoading="IsLoading">
+    @if (Playlist != null)
+    {
+        <PlaylistEditComponent Playlist="Playlist" />
+    }
+    else
+    {
+        <p>
+            Sorry, we could not find a playlist with id '@PlaylistId'.<br />
+            Make sure you are signed in with a correct user and haven't tried to type some bullshit into the url.
+        </p>
+    }
+</LoadingComponent>
+
+@code {
+    [Parameter]
+    public string PlaylistId { get; set; }
+
+    public bool IsLoading { get; set; }
+
+    public PlaylistDefinition Playlist { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+
+        User user = await _userAuthService.GetCurrentUserAsync();
+
+        Playlist = await _playlistDefService.GetByIdForUserAsync(PlaylistId, user.Id);
+
+        IsLoading = false;
+    }
+}

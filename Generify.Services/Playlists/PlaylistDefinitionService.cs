@@ -25,6 +25,11 @@ namespace Generify.Services.Playlists
             return await _playlistDefinitionRepo.GetAllByUserIdAsync(userId);
         }
 
+        public async Task<PlaylistDefinition> GetByIdForUserAsync(string playlistId, string userId)
+        {
+            return await _playlistDefinitionRepo.GetByIdForUserAsync(playlistId, userId);
+        }
+
         public async Task ExecuteGenerationAsync(string playlistDefinitionId)
         {
             PlaylistDefinition playlistDef = await _playlistDefinitionRepo.GetByIdAsync(playlistDefinitionId);

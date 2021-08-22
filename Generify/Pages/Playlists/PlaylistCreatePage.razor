@@ -1,0 +1,24 @@
+﻿@page "/playlists/create"
+@attribute [Authorize]
+@inject IUserAuthService _userAuthService
+
+<h3>Create playlist definition</h3>
+
+<PlaylistEditComponent Playlist="Playlist" />
+
+@code {
+    public PlaylistDefinition Playlist { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        User user = await _userAuthService.GetCurrentUserAsync();
+
+        Playlist = new PlaylistDefinition
+        {
+            User = user,
+            UserId = user.Id,
+            PlaylistSources = new List<PlaylistSource>(),
+            OrderInstructions = new List<OrderInstruction>()
+        };
+    }
+}

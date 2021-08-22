@@ -1,0 +1,128 @@
+﻿@inject IPlaylistDefinitionService _playlistDefService;
+
+@if (Playlist != null)
+{
+    <div class="form-container">
+        <EditForm Model="Playlist" Context="playlist" OnSubmit="@SaveAsync">
+            <label for="targetPlaylist">Target playlist id:</label>
+            <InputText id="targetPlaylist" @bind-Value="Playlist.TargetPlaylistId" /><br />
+
+            @foreach (PlaylistSource source in Playlist.PlaylistSources)
+            {
+                string sourceIdName = "sourceId" + source.OrderNr;
+                string sourceTypeName = "sourceType" + source.OrderNr;
+                string inclusionTypeName = "inclusionType" + source.OrderNr;
+
+                <div class="form-group">
+                    <label for="@sourceTypeName">Source type:</label>
+                    <InputSelect id="@sourceTypeName" @bind-Value="source.SourceType">
+                        <option value="@Generify.Models.Enums.SourceType.Album">Album</option>
+                        <option value="@Generify.Models.Enums.SourceType.Artist">Artist</option>
+                        <option value="@Generify.Models.Enums.SourceType.Library">Library</option>
+                        <option value="@Generify.Models.Enums.SourceType.Playlist">Playlist</option>
+                        <option value="@Generify.Models.Enums.SourceType.Track">Track</option>
+                    </InputSelect>
+
+                    <label for="@inclusionTypeName">Inclusion type:</label>
+                    <InputSelect id="@inclusionTypeName" @bind-Value="source.InclusionType">
+                        <option value="@Generify.Models.Enums.InclusionType.Include">Include</option>
+                        <option value="@Generify.Models.Enums.InclusionType.Exclude">Exclude</option>
+                    </InputSelect>
+
+                    <label for="@sourceIdName">Source Id:</label>
+                    <InputText id="@sourceIdName" @bind-Value="source.SourceId" />
+
+                    <input type="button" value="Remove source" @onclick="() => DeleteSource(source)" />
+                </div>
+            }
+
+            <input type="button" value="Add source" @onclick="AddSource" />
+
+            @foreach (OrderInstruction orderInstruction in Playlist.OrderInstructions)
+            {
+                string orderTypeName = "orderType" + orderInstruction.OrderNr;
+                string orderDirectionName = "orderDirection" + orderInstruction.OrderNr;
+
+                <div class="form-group">
+                    <label for="@orderTypeName">Order by:</label>
+                    <InputSelect id="@orderTypeName" @bind-Value="orderInstruction.OrderType">
+                        <option value="@Generify.Models.Enums.PlaylistOrderType.AlbumName">Album</option>
+                        <option value="@Generify.Models.Enums.PlaylistOrderType.ArtistName">Artist</option>
+                        <option value="@Generify.Models.Enums.PlaylistOrderType.Title">Title</option>
+                        <option value="@Generify.Models.Enums.PlaylistOrderType.TrackNr">Track Nr.</option>
+                    </InputSelect>
+
+                    <label for="@orderDirectionName">Order direction:</label>
+                    <InputSelect id="@orderDirectionName" @bind-Value="orderInstruction.OrderDirection">
+                        <option value="@Generify.Models.Enums.PlaylistOrderDirection.Ascending">Ascending</option>
+                        <option value="@Generify.Models.Enums.PlaylistOrderDirection.Descending">Descending</option>
+                    </InputSelect>
+
+                    <input type="button" value="Remove order instruction" @onclick="() => DeleteOrderInstruction(orderInstruction)" />
+                </div>
+            }
+
+            <input type="button" value="Add order instruction" @onclick="AddOrderInstruction" />
+
+            <input type="submit" value="Save" />
+        </EditForm>
+
+        @if (!string.IsNullOrWhiteSpace(_errorMessage))
+        {
+            <br /><span class="text-danger">@_errorMessage</span>
+        }
+    </div>
+}
+
+@code{
+    private string _errorMessage = null;
+
+    [Parameter]
+    public PlaylistDefinition Playlist { get; set; }
+
+    public async Task SaveAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Playlist.TargetPlaylistId))
+        {
+            _errorMessage = "The target playlist id is required";
+            return;
+        }
+
+        foreach (PlaylistSource source in Playlist.PlaylistSources)
+        {
+            if (string.IsNullOrWhiteSpace(source.SourceId) && source.SourceType != Models.Enums.SourceType.Library)
+            {
+                _errorMessage = "The source id is required";
+                return;
+            }
+        }
+
+        await _playlistDefService.SaveAsync(Playlist);
+    }
+
+    public void AddSource()
+    {
+        Playlist.PlaylistSources.Add(new PlaylistSource
+        {
+            OrderNr = Playlist.PlaylistSources.Select(o => o.OrderNr).DefaultIfEmpty().Max() + 1
+        });
+    }
+
+    public void DeleteSource(PlaylistSource source)
+    {
+        Playlist.PlaylistSources.Remove(source);
+    }
+
+    public void AddOrderInstruction()
+    {
+        Playlist.OrderInstructions.Add(new OrderInstruction
+        {
+            OrderNr = Playlist.OrderInstructions.Select(o => o.OrderNr).DefaultIfEmpty().Max() + 1
+        });
+    }
+
+    public void DeleteOrderInstruction(OrderInstruction orderInstruction)
+    {
+        Playlist.OrderInstructions.Remove(orderInstruction);
+    }
+}
