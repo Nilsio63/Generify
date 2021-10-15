@@ -11,5 +11,6 @@ namespace Generify.Services.Abstractions.Playlists
         Task LoadDetailsAsync(PlaylistDefinition playlistDefinition);
         Task ExecuteGenerationAsync(string playlistDefinitionId);
         Task SaveAsync(PlaylistDefinition playlistDefinition);
+        Task DeleteAsync(PlaylistDefinition playlistDefinition);
     }
 }

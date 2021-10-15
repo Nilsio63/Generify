@@ -20,6 +20,8 @@
 
             <input type="button" value="Edit" @onclick="() => EditPlaylistAsync(playlist.Definition)" />
 
+            <input type="button" value="Delete" @onclick="() => DeletePlaylistAsync(playlist)" />
+
             @if (!string.IsNullOrWhiteSpace(playlist.ErrorMessage))
             {
                 <br /><span class="text-danger">@playlist.ErrorMessage</span>
@@ -68,5 +70,12 @@
         await _playlistDefService.LoadDetailsAsync(playlist);
 
         _navManager.NavigateTo($"/playlists/edit/{playlist.Id}");
+    }
+
+    public async Task DeletePlaylistAsync(PlaylistOverview playlist)
+    {
+        await _playlistDefService.DeleteAsync(playlist.Definition);
+
+        PlaylistDefinitions.Remove(playlist);
     }
 }

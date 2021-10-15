@@ -73,5 +73,10 @@ namespace Generify.Services.Playlists
 
             await _playlistDefinitionRepo.SaveAsync(playlistDefinition);
         }
+
+        public async Task DeleteAsync(PlaylistDefinition playlistDefinition)
+        {
+            await _playlistDefinitionRepo.DeleteAsync(playlistDefinition);
+        }
     }
 }
