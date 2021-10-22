@@ -11,16 +11,16 @@
             <i>@Playlist.Description</i>
         </p>
 
-        <LoadingComponent IsLoading="Playlist.IsGenerating" LoadingText="Generating your playlist...">
+        <LoadingComponent IsLoading="_isGenerating" LoadingText="Generating your playlist...">
             <input type="submit" @onclick="() => ExecuteAsync(Playlist)" value="Generate" />
 
             <input type="button" value="Edit" @onclick="() => EditPlaylistAsync(Playlist.Definition)" />
 
             <input type="button" value="Delete" @onclick="() => DeletePlaylistAsync(Playlist)" />
 
-            @if (!string.IsNullOrWhiteSpace(Playlist.ErrorMessage))
+            @if (!string.IsNullOrWhiteSpace(_errorMessage))
             {
-                <br /><span class="text-danger">@Playlist.ErrorMessage</span>
+                <br /><span class="text-danger">@_errorMessage</span>
             }
         </LoadingComponent>
     </div>
@@ -30,10 +30,13 @@
     [Parameter]
     public PlaylistOverview Playlist { get; set; }
 
+    private string _errorMessage = null;
+    private bool _isGenerating = false;
+
     public async Task ExecuteAsync(PlaylistOverview playlist)
     {
-        playlist.IsGenerating = true;
-        playlist.ErrorMessage = null;
+        _isGenerating = true;
+        _errorMessage = null;
 
         try
         {
@@ -41,11 +44,11 @@
         }
         catch (Exception ex)
         {
-            playlist.ErrorMessage = ex.Message;
+            _errorMessage = ex.Message;
         }
         finally
         {
-            playlist.IsGenerating = false;
+            _isGenerating = false;
         }
     }
 

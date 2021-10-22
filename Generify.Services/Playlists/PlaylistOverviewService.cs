@@ -51,9 +51,7 @@ namespace Generify.Services.Playlists
                 {
                     Definition = o.Def,
                     Name = o.Playlist.Name,
-                    Description = HttpUtility.HtmlDecode(o.Playlist.Description),
-                    IsGenerating = false,
-                    ErrorMessage = null
+                    Description = HttpUtility.HtmlDecode(o.Playlist.Description)
                 })
                 .ToListAsync();
         }
