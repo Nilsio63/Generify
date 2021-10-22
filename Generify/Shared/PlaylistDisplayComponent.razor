@@ -1,0 +1,65 @@
+﻿@inject NavigationManager _navManager
+@inject IUserAuthService _userAuthService
+@inject IPlaylistDefinitionService _playlistDefService
+@inject IPlaylistOverviewService _playlistOverviewService
+
+@if (Playlist != null)
+{
+    <div>
+        <p>
+            <b>@Playlist.Name</b><br />
+            <i>@Playlist.Description</i>
+        </p>
+
+        <LoadingComponent IsLoading="Playlist.IsGenerating" LoadingText="Generating your playlist...">
+            <input type="submit" @onclick="() => ExecuteAsync(Playlist)" value="Generate" />
+
+            <input type="button" value="Edit" @onclick="() => EditPlaylistAsync(Playlist.Definition)" />
+
+            <input type="button" value="Delete" @onclick="() => DeletePlaylistAsync(Playlist)" />
+
+            @if (!string.IsNullOrWhiteSpace(Playlist.ErrorMessage))
+            {
+                <br /><span class="text-danger">@Playlist.ErrorMessage</span>
+            }
+        </LoadingComponent>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public PlaylistOverview Playlist { get; set; }
+
+    public async Task ExecuteAsync(PlaylistOverview playlist)
+    {
+        playlist.IsGenerating = true;
+        playlist.ErrorMessage = null;
+
+        try
+        {
+            await _playlistDefService.ExecuteGenerationAsync(playlist.Definition.Id);
+        }
+        catch (Exception ex)
+        {
+            playlist.ErrorMessage = ex.Message;
+        }
+        finally
+        {
+            playlist.IsGenerating = false;
+        }
+    }
+
+    public async Task EditPlaylistAsync(PlaylistDefinition playlist)
+    {
+        await _playlistDefService.LoadDetailsAsync(playlist);
+
+        _navManager.NavigateTo($"/playlists/edit/{playlist.Id}");
+    }
+
+    public async Task DeletePlaylistAsync(PlaylistOverview playlist)
+    {
+        await _playlistDefService.DeleteAsync(playlist.Definition);
+
+        Playlist = null;
+    }
+}
