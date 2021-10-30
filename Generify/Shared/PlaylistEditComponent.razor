@@ -1,4 +1,5 @@
-﻿@inject IPlaylistDefinitionService _playlistDefService;
+﻿@inject NavigationManager _navManager
+@inject IPlaylistDefinitionService _playlistDefService
 
 @if (Playlist != null)
 {
@@ -98,6 +99,8 @@
         }
 
         await _playlistDefService.SaveAsync(Playlist);
+
+        _navManager.NavigateTo("/playlists");
     }
 
     public void AddSource()
