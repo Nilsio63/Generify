@@ -1,13 +1,12 @@
-﻿using SpotifyAPI.Web;
+﻿using Generify.External.Abstractions.Models;
 using System.Collections.Generic;
 
 namespace Generify.Services.Internal.Models
 {
     public class PlaylistGenerationContext
     {
-        public ISpotifyClient Client { get; set; }
-        public FullPlaylist TargetPlaylist { get; set; }
-        public List<FullTrack> SourceTracks { get; set; }
-        public List<FullTrack> TargetTracks { get; set; }
+        public PlaylistInfo TargetPlaylist { get; set; }
+        public List<TrackInfo> SourceTracks { get; set; }
+        public List<TrackInfo> TargetTracks { get; set; }
     }
 }

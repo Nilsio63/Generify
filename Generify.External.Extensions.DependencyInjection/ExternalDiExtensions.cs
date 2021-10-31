@@ -11,7 +11,9 @@ namespace Generify.External.Extensions.DependencyInjection
         {
             return services
                 .AddTransient<ISpotifyClientFactory, SpotifyClientFactory>()
-                .AddTransient<IPlaylistInfoService, PlaylistInfoService>();
+                .AddTransient<IPlaylistEditService, PlaylistEditService>()
+                .AddTransient<IPlaylistInfoService, PlaylistInfoService>()
+                .AddTransient<ITrackInfoService, TrackInfoService>();
         }
     }
 }

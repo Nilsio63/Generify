@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="morelinq" Version="3.3.2" />
+    <PackageReference Include="SpotifyAPI.Web" Version="6.1.0" />
+    <PackageReference Include="System.Linq.Async" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Generify.External.Abstractions\Generify.External.Abstractions.csproj" />
     <ProjectReference Include="..\Generify.Services.Abstractions\Generify.Services.Abstractions.csproj" />
   </ItemGroup>

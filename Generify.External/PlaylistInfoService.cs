@@ -26,6 +26,7 @@ namespace Generify.External
                 ? null
                 : new PlaylistInfo
                 {
+                    Id = playlist.Id,
                     Name = playlist.Name,
                     Description = HttpUtility.HtmlDecode(playlist.Description)
                 };
