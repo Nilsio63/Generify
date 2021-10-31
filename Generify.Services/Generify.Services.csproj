@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Generify.External.Abstractions\Generify.External.Abstractions.csproj" />
     <ProjectReference Include="..\Generify.Services.Abstractions\Generify.Services.Abstractions.csproj" />
   </ItemGroup>
 

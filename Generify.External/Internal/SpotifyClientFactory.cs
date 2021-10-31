@@ -1,18 +1,34 @@
-﻿using Generify.Services.Abstractions.Management;
-using Generify.Services.Internal.Interfaces;
+﻿using Generify.External.Abstractions;
+using Generify.Models.Management;
+using Generify.Services.Abstractions.Management;
 using SpotifyAPI.Web;
 using System;
 using System.Threading.Tasks;
 
-namespace Generify.Services.Internal
+namespace Generify.External.Internal
 {
     public class SpotifyClientFactory : ISpotifyClientFactory
     {
         private readonly IExternalAuthSettings _externalAuthSettings;
+        private readonly IUserContextAccessor _userContextAccessor;
 
-        public SpotifyClientFactory(IExternalAuthSettings externalAuthSettings)
+        public SpotifyClientFactory(IExternalAuthSettings externalAuthSettings,
+            IUserContextAccessor userContextAccessor)
         {
             _externalAuthSettings = externalAuthSettings;
+            _userContextAccessor = userContextAccessor;
+        }
+
+        public async Task<ISpotifyClient> CreateClientAsync()
+        {
+            User user = await _userContextAccessor.GetCurrentUserAsync();
+
+            if (user is null)
+            {
+                throw new InvalidOperationException("User is not logged in!");
+            }
+
+            return await CreateClientAsync(user.RefreshToken);
         }
 
         public async Task<ISpotifyClient> CreateClientAsync(string refreshToken)

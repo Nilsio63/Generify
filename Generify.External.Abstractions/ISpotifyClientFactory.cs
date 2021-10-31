@@ -1,10 +1,11 @@
 ﻿using SpotifyAPI.Web;
 using System.Threading.Tasks;
 
-namespace Generify.Services.Internal.Interfaces
+namespace Generify.External.Abstractions
 {
     public interface ISpotifyClientFactory
     {
+        Task<ISpotifyClient> CreateClientAsync();
         Task<ISpotifyClient> CreateClientAsync(string refreshToken);
     }
 }

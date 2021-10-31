@@ -1,6 +1,8 @@
 using Blazored.LocalStorage;
-using Generify.Services;
+using Generify.External.Extensions.DependencyInjection;
 using Generify.Repositories.Extensions.DependencyInjection;
+using Generify.Services;
+using Generify.Services.Abstractions.Management;
 using Generify.Services.Extensions.DependencyInjection;
 using Generify.Services.Management;
 using Microsoft.AspNetCore.Builder;
@@ -70,12 +72,15 @@ namespace Generify
                 return new ExternalAuthSettings(clientId, clientSecret, $"https://{hostAddress}/authCallback");
             });
 
+            services.AddExternalServices();
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddBlazoredLocalStorage();
             services.AddHttpContextAccessor();
 
             services.AddTransient<IUserAuthService, UserAuthService>();
+            services.AddTransient<IUserContextAccessor, UserAuthService>();
 
             services.AddScoped<IGenerifyAuthenticationStateProvider, GenerifyAuthenticationStateProvider>();
             services.AddScoped(s => (AuthenticationStateProvider)s.GetRequiredService<IGenerifyAuthenticationStateProvider>());

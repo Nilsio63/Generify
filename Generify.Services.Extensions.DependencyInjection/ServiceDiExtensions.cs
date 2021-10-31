@@ -42,7 +42,6 @@ namespace Generify.Services.Extensions.DependencyInjection
                 .AddTransient<IPlaylistGenerator, PlaylistGenerator>()
                 .AddTransient<IPlaylistSyncWorker, PlaylistSyncWorker>()
                 .AddTransient<IPlaylistGenerationContextBuilder, PlaylistGenerationContextBuilder>()
-                .AddTransient<ISpotifyClientFactory, SpotifyClientFactory>()
                 .AddTransient<IPlaylistDefinitionService, PlaylistDefinitionService>()
                 .AddTransient<IPlaylistOverviewService, PlaylistOverviewService>()
                 .AddTransient<IUserService, UserService>();
