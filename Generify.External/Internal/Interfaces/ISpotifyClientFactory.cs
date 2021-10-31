@@ -1,7 +1,7 @@
 ﻿using SpotifyAPI.Web;
 using System.Threading.Tasks;
 
-namespace Generify.External.Abstractions
+namespace Generify.External.Internal.Interfaces
 {
     public interface ISpotifyClientFactory
     {

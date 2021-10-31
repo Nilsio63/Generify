@@ -1,6 +1,6 @@
-﻿using Generify.External.Abstractions;
-using Generify.External.Abstractions.Services;
+﻿using Generify.External.Abstractions.Services;
 using Generify.External.Internal;
+using Generify.External.Internal.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Generify.External.Extensions.DependencyInjection

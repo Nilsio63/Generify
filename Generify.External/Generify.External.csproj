@@ -15,8 +15,4 @@
     <ProjectReference Include="..\Generify.Services.Abstractions\Generify.Services.Abstractions.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Internal\Interfaces\" />
-  </ItemGroup>
-
 </Project>

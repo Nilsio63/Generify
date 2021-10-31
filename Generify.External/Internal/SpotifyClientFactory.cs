@@ -1,4 +1,4 @@
-﻿using Generify.External.Abstractions;
+﻿using Generify.External.Internal.Interfaces;
 using Generify.Models.Management;
 using Generify.Services.Abstractions.Management;
 using SpotifyAPI.Web;

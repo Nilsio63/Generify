@@ -1,6 +1,6 @@
-﻿using Generify.External.Abstractions;
-using Generify.External.Abstractions.Models;
+﻿using Generify.External.Abstractions.Models;
 using Generify.External.Abstractions.Services;
+using Generify.External.Internal.Interfaces;
 using MoreLinq;
 using SpotifyAPI.Web;
 using System.Collections.Generic;
