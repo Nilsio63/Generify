@@ -1,6 +1,6 @@
-﻿using Generify.Services.Abstractions.Management;
+﻿using Generify.External.Abstractions.Settings;
 
-namespace Generify.Services.Management
+namespace Generify.External.Settings
 {
     public class ExternalAuthSettings : IExternalAuthSettings
     {

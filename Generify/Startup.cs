@@ -1,10 +1,10 @@
 using Blazored.LocalStorage;
 using Generify.External.Extensions.DependencyInjection;
+using Generify.External.Settings;
 using Generify.Repositories.Extensions.DependencyInjection;
 using Generify.Services;
 using Generify.Services.Abstractions.Management;
 using Generify.Services.Extensions.DependencyInjection;
-using Generify.Services.Management;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -51,7 +51,9 @@ namespace Generify
                 .GetValue<string>("Salt")
                 .Replace("%GENERIFY_PASSWORD_SALT%", Configuration.GetValue<string>("GENERIFY_PASSWORD_SALT"));
 
-            services.AddGenerifyServices(saltString, s =>
+            services.AddGenerifyServices(saltString);
+
+            services.AddExternalServices(s =>
             {
                 NavigationManager navManager = s.GetRequiredService<NavigationManager>();
 
@@ -71,8 +73,6 @@ namespace Generify
 
                 return new ExternalAuthSettings(clientId, clientSecret, $"https://{hostAddress}/authCallback");
             });
-
-            services.AddExternalServices();
 
             services.AddRazorPages();
             services.AddServerSideBlazor();

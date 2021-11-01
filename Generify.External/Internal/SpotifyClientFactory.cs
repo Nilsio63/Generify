@@ -1,4 +1,5 @@
-﻿using Generify.External.Internal.Interfaces;
+﻿using Generify.External.Abstractions.Settings;
+using Generify.External.Internal.Interfaces;
 using Generify.Models.Management;
 using Generify.Services.Abstractions.Management;
 using SpotifyAPI.Web;
@@ -31,7 +32,7 @@ namespace Generify.External.Internal
             return await CreateClientAsync(user.RefreshToken);
         }
 
-        public async Task<ISpotifyClient> CreateClientAsync(string refreshToken)
+        private async Task<ISpotifyClient> CreateClientAsync(string refreshToken)
         {
             if (string.IsNullOrWhiteSpace(refreshToken))
             {

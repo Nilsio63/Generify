@@ -1,8 +1,7 @@
-﻿using Generify.Models.Management;
+﻿using Generify.External.Abstractions.Services;
+using Generify.Models.Management;
 using Generify.Repositories.Abstractions.Management;
 using Generify.Services.Abstractions.Management;
-using SpotifyAPI.Web;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,27 +9,19 @@ namespace Generify.Services.Management
 {
     public class ExternalAuthService : IExternalAuthService
     {
-        private readonly IExternalAuthSettings _externalAuthSettings;
+        private readonly ILoginService _loginService;
         private readonly IUserRepository _userRepo;
 
-        public ExternalAuthService(IExternalAuthSettings externalAuthSettings,
+        public ExternalAuthService(ILoginService loginService,
             IUserRepository userRepo)
         {
-            _externalAuthSettings = externalAuthSettings;
+            _loginService = loginService;
             _userRepo = userRepo;
         }
 
         public string GetExternalLoginUrl(string userId)
         {
-            var r = new LoginRequest(new Uri(_externalAuthSettings.CallbackUrl),
-                _externalAuthSettings.ClientId,
-                LoginRequest.ResponseType.Code)
-            {
-                State = userId,
-                Scope = new[] { Scopes.UserTopRead, Scopes.UserReadEmail, Scopes.UserLibraryRead, Scopes.UserFollowRead, Scopes.PlaylistModifyPrivate, Scopes.PlaylistModifyPublic }
-            };
-
-            return r.ToUri().ToString();
+            return _loginService.GetExternalLoginUrl(userId);
         }
 
         public async Task SaveAccessTokenAsync(string userId, string accessToken)
@@ -38,10 +29,7 @@ namespace Generify.Services.Management
             User user = await _userRepo.GetByIdAsync(userId)
                 ?? throw new KeyNotFoundException($"Could not find user with id '{userId}'!");
 
-            AuthorizationCodeTokenResponse response = await new OAuthClient().RequestToken(
-                new AuthorizationCodeTokenRequest(_externalAuthSettings.ClientId, _externalAuthSettings.ClientSecret, accessToken, new Uri(_externalAuthSettings.CallbackUrl)));
-
-            user.RefreshToken = response.RefreshToken;
+            user.RefreshToken = await _loginService.GetRefreshTokenAsync(accessToken);
 
             await _userRepo.SaveAsync(user);
         }

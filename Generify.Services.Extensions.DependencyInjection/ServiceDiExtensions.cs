@@ -7,24 +7,22 @@ using Generify.Services.Management;
 using Generify.Services.Playlists;
 using Generify.Services.Security;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Generify.Services.Extensions.DependencyInjection
 {
     public static class ServiceDiExtensions
     {
-        public static IServiceCollection AddGenerifyServices(this IServiceCollection services, string passwordSalt, Func<IServiceProvider, IExternalAuthSettings> settingsFactory)
+        public static IServiceCollection AddGenerifyServices(this IServiceCollection services, string passwordSalt)
         {
             return services
-                .AddSettings(passwordSalt, settingsFactory)
+                .AddSettings(passwordSalt)
                 .AddSecurity()
                 .AddServices();
         }
 
-        private static IServiceCollection AddSettings(this IServiceCollection services, string passwordSalt, Func<IServiceProvider, IExternalAuthSettings> settingsFactory)
+        private static IServiceCollection AddSettings(this IServiceCollection services, string passwordSalt)
         {
             return services
-                .AddTransient(settingsFactory)
                 .AddSingleton<ISaltSettings>(new SaltSettings(passwordSalt));
         }
 

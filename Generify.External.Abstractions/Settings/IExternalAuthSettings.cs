@@ -1,4 +1,4 @@
-﻿namespace Generify.Services.Abstractions.Management
+﻿namespace Generify.External.Abstractions.Settings
 {
     public interface IExternalAuthSettings
     {
