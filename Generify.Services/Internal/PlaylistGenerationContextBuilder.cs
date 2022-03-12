@@ -4,7 +4,6 @@ using Generify.Models.Enums;
 using Generify.Models.Playlists;
 using Generify.Services.Internal.Interfaces;
 using Generify.Services.Internal.Models;
-using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,17 +70,17 @@ namespace Generify.Services.Internal
 
         private IEnumerable<TrackInfo> GenericSort<T>(IEnumerable<TrackInfo> trackList, Func<TrackInfo, T> sortSelector, PlaylistOrderDirection orderDirection)
         {
-            OrderByDirection direction = orderDirection == PlaylistOrderDirection.Descending
-                ? OrderByDirection.Descending
-                : OrderByDirection.Ascending;
-
             if (trackList is IOrderedEnumerable<TrackInfo> ordered)
             {
-                return ordered.ThenBy(sortSelector, direction);
+                return orderDirection == PlaylistOrderDirection.Ascending
+                    ? ordered.ThenBy(sortSelector)
+                    : ordered.ThenByDescending(sortSelector);
             }
             else
             {
-                return trackList.OrderBy(sortSelector, direction);
+                return orderDirection == PlaylistOrderDirection.Ascending
+                    ? trackList.OrderBy(sortSelector)
+                    : trackList.OrderByDescending(sortSelector);
             }
         }
 
