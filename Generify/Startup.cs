@@ -31,16 +31,11 @@ namespace Generify
         {
             services.AddGenerifyRepos(dbOptions =>
             {
-                var conSection = Configuration.GetSection("Generify").GetSection("Connection");
+                IConfigurationSection conSection = Configuration.GetSection("Generify").GetSection("Connection");
 
-                string accountEndpoint = conSection.GetValue<string>("Endpoint")
-                    .Replace("%GENERIFY_DB_ENDPOINT%", Configuration.GetValue<string>("GENERIFY_DB_ENDPOINT"));
-
-                string accountKey = conSection.GetValue<string>("AccountKey")
-                    .Replace("%GENERIFY_DB_ACCOUNT_KEY%", Configuration.GetValue<string>("GENERIFY_DB_ACCOUNT_KEY"));
-
-                string dbName = conSection.GetValue<string>("DataBase")
-                    .Replace("%GENERIFY_DB_DATABASE%", Configuration.GetValue<string>("GENERIFY_DB_DATABASE"));
+                string accountEndpoint = conSection.GetValue<string>("Endpoint");
+                string accountKey = conSection.GetValue<string>("AccountKey");
+                string dbName = conSection.GetValue<string>("DataBase");
 
                 dbOptions.UseCosmos(accountEndpoint, accountKey, dbName);
             });
@@ -48,8 +43,7 @@ namespace Generify
             string saltString = Configuration
                 .GetSection("Generify")
                 .GetSection("Encoding")
-                .GetValue<string>("Salt")
-                .Replace("%GENERIFY_PASSWORD_SALT%", Configuration.GetValue<string>("GENERIFY_PASSWORD_SALT"));
+                .GetValue<string>("Salt");
 
             services.AddGenerifyServices(saltString);
 
@@ -62,14 +56,12 @@ namespace Generify
                 string clientId = Configuration
                     .GetSection("Generify")
                     .GetSection("External")
-                    .GetValue<string>("ClientId")
-                    .Replace("%GENERIFY_CLIENT_ID%", Configuration.GetValue<string>("GENERIFY_CLIENT_ID"));
+                    .GetValue<string>("ClientId");
 
                 string clientSecret = Configuration
                     .GetSection("Generify")
                     .GetSection("External")
-                    .GetValue<string>("ClientSecret")
-                    .Replace("%GENERIFY_CLIENT_SECRET%", Configuration.GetValue<string>("GENERIFY_CLIENT_SECRET"));
+                    .GetValue<string>("ClientSecret");
 
                 return new ExternalAuthSettings(clientId, clientSecret, $"https://{hostAddress}/authCallback");
             });
