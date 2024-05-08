@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30204.135
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify", "Generify\Generify.csproj", "{E263BB14-57EA-495C-9DB0-AB5700B66EFF}"
 EndProject
@@ -19,11 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Repositories.Exten
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.Services.Extensions.DependencyInjection", "Generify.Services.Extensions.DependencyInjection\Generify.Services.Extensions.DependencyInjection.csproj", "{7C4D0BB1-0F0F-4668-A51F-8EC061968238}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generify.External.Abstractions", "Generify.External.Abstractions\Generify.External.Abstractions.csproj", "{B5FD3F74-5653-4CAA-B53E-638E48F8F573}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.External.Abstractions", "Generify.External.Abstractions\Generify.External.Abstractions.csproj", "{B5FD3F74-5653-4CAA-B53E-638E48F8F573}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generify.External", "Generify.External\Generify.External.csproj", "{707ACACE-A33B-4EFF-AE4F-155A445CB724}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.External", "Generify.External\Generify.External.csproj", "{707ACACE-A33B-4EFF-AE4F-155A445CB724}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generify.External.Extensions.DependencyInjection", "Generify.External.Extensions.DependencyInjection\Generify.External.Extensions.DependencyInjection.csproj", "{85E730CC-52FF-484D-9ED9-68AA8D284F0D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Generify.External.Extensions.DependencyInjection", "Generify.External.Extensions.DependencyInjection\Generify.External.Extensions.DependencyInjection.csproj", "{85E730CC-52FF-484D-9ED9-68AA8D284F0D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
