@@ -13,10 +13,7 @@ namespace Generify.Repositories.Extensions.DependencyInjection
         public static IServiceCollection AddGenerifyRepos(this IServiceCollection services, Action<DbContextOptionsBuilder> dbOptionsAction)
         {
             return services
-                .AddDbContext<GenerifyDataContext>(dbOptions =>
-                {
-                    dbOptionsAction.Invoke(dbOptions);
-                })
+                .AddDbContext<GenerifyDataContext>(dbOptionsAction.Invoke)
                 .AddTransient<IPlaylistDefinitionRepository, PlaylistDefinitionRepository>()
                 .AddTransient<IUserRepository, UserRepository>();
         }

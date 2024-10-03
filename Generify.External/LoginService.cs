@@ -15,13 +15,12 @@ namespace Generify.External
             _externalAuthSettings = externalAuthSettings;
         }
 
-        public string GetExternalLoginUrl(string userId)
+        public string GetExternalLoginUrl()
         {
             var request = new LoginRequest(new Uri(_externalAuthSettings.CallbackUrl),
                 _externalAuthSettings.ClientId,
                 LoginRequest.ResponseType.Code)
             {
-                State = userId,
                 Scope = new[] { Scopes.UserTopRead, Scopes.UserReadEmail, Scopes.UserLibraryRead, Scopes.UserFollowRead, Scopes.PlaylistModifyPrivate, Scopes.PlaylistModifyPublic }
             };
 

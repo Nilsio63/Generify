@@ -5,9 +5,7 @@ namespace Generify.Models.Management
 {
     public class User : Entity
     {
-        public string UserNameInternal { get; set; }
-        public string UserNameDisplay { get; set; }
-        public byte[] PasswordHash { get; set; }
+        public string SpotifyId { get; set; }
         public string RefreshToken { get; set; }
 
         public List<PlaylistDefinition> PlaylistDefinitions { get; set; }

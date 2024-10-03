@@ -4,7 +4,7 @@ namespace Generify.External.Abstractions.Services
 {
     public interface ILoginService
     {
-        string GetExternalLoginUrl(string userId);
+        string GetExternalLoginUrl();
         Task<string> GetRefreshTokenAsync(string accessToken);
     }
 }

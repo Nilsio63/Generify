@@ -41,20 +41,6 @@ namespace Generify.Services
             return user;
         }
 
-        public async Task<string> TryLoginAsync(string userName, string password)
-        {
-            User user = await _userService.GetByLoginAsync(userName, password);
-
-            if (user == null)
-            {
-                return "Username or password is wrong";
-            }
-
-            await LoginAsync(user);
-
-            return null;
-        }
-
         public async Task LoginAsync(User user)
         {
             await _authStateProvider.SetAuthenticatedAsync(user);

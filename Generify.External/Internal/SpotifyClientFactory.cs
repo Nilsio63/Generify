@@ -32,7 +32,7 @@ namespace Generify.External.Internal
             return await CreateClientAsync(user.RefreshToken);
         }
 
-        private async Task<ISpotifyClient> CreateClientAsync(string refreshToken)
+        public async Task<ISpotifyClient> CreateClientAsync(string refreshToken)
         {
             if (string.IsNullOrWhiteSpace(refreshToken))
             {

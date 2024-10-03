@@ -22,9 +22,6 @@ namespace Generify.Repositories
             {
                 e.HasKey(o => o.Id);
                 e.Property(o => o.Id).ValueGeneratedOnAdd();
-                e.Property(o => o.UserNameInternal).IsRequired();
-                e.Property(o => o.UserNameDisplay).IsRequired();
-                e.Property(o => o.PasswordHash).IsRequired();
                 e.Property(o => o.RefreshToken).IsRequired(false);
             });
 

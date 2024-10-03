@@ -40,12 +40,7 @@ namespace Generify
                 dbOptions.UseCosmos(accountEndpoint, accountKey, dbName);
             });
 
-            string saltString = Configuration
-                .GetSection("Generify")
-                .GetSection("Encoding")
-                .GetValue<string>("Salt");
-
-            services.AddGenerifyServices(saltString);
+            services.AddGenerifyServices();
 
             services.AddExternalServices(s =>
             {

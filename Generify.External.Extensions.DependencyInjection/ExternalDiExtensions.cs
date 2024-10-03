@@ -17,7 +17,8 @@ namespace Generify.External.Extensions.DependencyInjection
                 .AddTransient<ILoginService, LoginService>()
                 .AddTransient<IPlaylistEditService, PlaylistEditService>()
                 .AddTransient<IPlaylistInfoService, PlaylistInfoService>()
-                .AddTransient<ITrackInfoService, TrackInfoService>();
+                .AddTransient<ITrackInfoService, TrackInfoService>()
+                .AddTransient<IUserInfoService, UserInfoService>();
         }
     }
 }
