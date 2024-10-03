@@ -28,9 +28,9 @@
 
 @code {
     [Parameter]
-    public PlaylistOverview Playlist { get; set; }
+    public PlaylistOverview? Playlist { get; set; }
 
-    private string _errorMessage = null;
+    private string? _errorMessage = null;
     private bool _isGenerating = false;
 
     public async Task ExecuteAsync(PlaylistOverview playlist)

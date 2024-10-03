@@ -29,7 +29,8 @@ public class PlaylistGenerationContextBuilder : IPlaylistGenerationContextBuilde
 
         sourceTracks = Sort(playlistDefinition, sourceTracks);
 
-        PlaylistInfo targetPlaylist = await _playlistInfoService.GetPlaylistInfoAsync(playlistDefinition.TargetPlaylistId);
+        PlaylistInfo targetPlaylist = await _playlistInfoService.GetPlaylistInfoAsync(playlistDefinition.TargetPlaylistId)
+            ?? throw new KeyNotFoundException($"Could not find playlist with id {playlistDefinition.TargetPlaylistId}");
 
         List<TrackInfo> targetTracks = await _trackInfoService.GetByPlaylistIdAsync(targetPlaylist.Id);
 
@@ -148,8 +149,13 @@ public class PlaylistGenerationContextBuilder : IPlaylistGenerationContextBuilde
 
     private async Task<List<TrackInfo>> GetFromTrackAsync(PlaylistSource source)
     {
-        TrackInfo track = await _trackInfoService.GetByIdAsync(source.SourceId);
+        TrackInfo? track = await _trackInfoService.GetByIdAsync(source.SourceId);
 
-        return new List<TrackInfo> { track };
+        if (track is not null)
+        {
+            return [track];
+        }
+
+        return [];
     }
 }

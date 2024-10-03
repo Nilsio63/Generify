@@ -21,9 +21,11 @@ public class GenerifyAuthenticationStateProvider : AuthenticationStateProvider, 
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
-        string userId = await _localStorageService.GetItemAsync<string>("userId");
+        string? userId = await _localStorageService.GetItemAsync<string>("userId");
 
-        User user = await _userService.GetByIdAsync(userId);
+        User? user = string.IsNullOrWhiteSpace(userId)
+            ? null
+            : await _userService.GetByIdAsync(userId);
 
         var claimsIdentity = user != null
             ? GetClaimsIdentity(user)

@@ -9,7 +9,7 @@ public interface IBaseRepository<T>
 {
     Task<List<T>> GetAllAsync();
     Task<List<T>> GetAllByIdListAsync(IEnumerable<string> idList);
-    Task<T> GetByIdAsync(string id);
+    Task<T?> GetByIdAsync(string id);
 
     Task<List<T>> SaveRangeAsync(IEnumerable<T> objectList);
     Task<T> SaveAsync(T obj);

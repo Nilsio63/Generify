@@ -5,5 +5,5 @@ namespace Generify.Services.Abstractions.Management;
 
 public interface IUserContextAccessor
 {
-    Task<User> GetCurrentUserAsync();
+    Task<User?> GetCurrentUserAsync();
 }

@@ -22,21 +22,21 @@ public class UserAuthService : IUserAuthService
 
     public async Task<bool> IsUserLoggedInAsync()
     {
-        string userId = await _localStorageService.GetItemAsync<string>("userId");
+        string? userId = await _localStorageService.GetItemAsync<string>("userId");
 
         return !string.IsNullOrWhiteSpace(userId);
     }
 
-    public async Task<User> GetCurrentUserAsync()
+    public async Task<User?> GetCurrentUserAsync()
     {
-        string userId = await _localStorageService.GetItemAsync<string>("userId");
+        string? userId = await _localStorageService.GetItemAsync<string>("userId");
 
         if (string.IsNullOrWhiteSpace(userId))
         {
             return null;
         }
 
-        User user = await _userService.GetByIdAsync(userId);
+        User? user = await _userService.GetByIdAsync(userId);
 
         return user;
     }

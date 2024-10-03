@@ -5,5 +5,5 @@ namespace Generify.External.Abstractions.Services;
 
 public interface IPlaylistInfoService
 {
-    Task<PlaylistInfo> GetPlaylistInfoAsync(string playlistId);
+    Task<PlaylistInfo?> GetPlaylistInfoAsync(string playlistId);
 }

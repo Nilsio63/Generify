@@ -76,10 +76,10 @@
 }
 
 @code{
-    private string _errorMessage = null;
+    private string? _errorMessage = null;
 
     [Parameter]
-    public PlaylistDefinition Playlist { get; set; }
+    public PlaylistDefinition Playlist { get; set; } = new();
 
     public async Task SaveAsync()
     {

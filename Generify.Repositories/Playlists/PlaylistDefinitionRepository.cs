@@ -22,7 +22,7 @@ public class PlaylistDefinitionRepository : BaseRepository<PlaylistDefinition>, 
             .ToListAsync();
     }
 
-    public async Task<PlaylistDefinition> GetByIdForUserAsync(string playlistId, string userId)
+    public async Task<PlaylistDefinition?> GetByIdForUserAsync(string playlistId, string userId)
     {
         return await BaseSelect
             .Where(o => o.Id == playlistId

@@ -13,7 +13,7 @@ public class UserRepository : BaseRepository<User>, IUserRepository
     {
     }
 
-    public async Task<User> GetBySpotifyIdAsync(string spotifyUserId)
+    public async Task<User?> GetBySpotifyIdAsync(string spotifyUserId)
     {
         return await BaseSelect
             .Where(o => o.SpotifyId == spotifyUserId)

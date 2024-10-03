@@ -6,7 +6,7 @@
 <h1>My Playlists</h1>
 
 <LoadingComponent IsLoading="PlaylistDefinitions is null">
-    @foreach (PlaylistOverview playlist in PlaylistDefinitions)
+    @foreach (PlaylistOverview playlist in PlaylistDefinitions ?? [])
     {
         <PlaylistDisplayComponent Playlist="@playlist" />
     }
@@ -19,12 +19,15 @@
 </LoadingComponent>
 
 @code {
-    public List<PlaylistOverview> PlaylistDefinitions { get; set; }
+    public List<PlaylistOverview> PlaylistDefinitions { get; set; } = [];
 
     protected override async Task OnInitializedAsync()
     {
-        User user = await _userAuthService.GetCurrentUserAsync();
+        User? user = await _userAuthService.GetCurrentUserAsync();
 
-        PlaylistDefinitions = await _playlistOverviewService.GetAllByUserIdAsync(user.Id);
+        if (user is not null)
+        {
+            PlaylistDefinitions = await _playlistOverviewService.GetAllByUserIdAsync(user.Id);
+        }
     }
 }

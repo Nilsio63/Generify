@@ -31,16 +31,16 @@
 </div>
 
 @code {
-    public string ErrorMessage { get; set; }
+    public string? ErrorMessage { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         Uri uri = _navManager.ToAbsoluteUri(_navManager.Uri);
 
-        string code = QueryHelpers.ParseQuery(uri.Query).TryGetValue("code", out var c) ? c.First() : null;
-        string error = QueryHelpers.ParseQuery(uri.Query).TryGetValue("error", out var e) ? e.First() : null;
+        string? code = QueryHelpers.ParseQuery(uri.Query).TryGetValue("code", out var c) ? c.First() : null;
+        string? error = QueryHelpers.ParseQuery(uri.Query).TryGetValue("error", out var e) ? e.First() : null;
 
-        if (string.IsNullOrWhiteSpace(error))
+        if (!string.IsNullOrWhiteSpace(code))
         {
             User user = await _externalAuthService.SaveAccessTokenAsync(code);
 

@@ -22,7 +22,7 @@ public class SpotifyClientFactory : ISpotifyClientFactory
 
     public async Task<ISpotifyClient> CreateClientAsync()
     {
-        User user = await _userContextAccessor.GetCurrentUserAsync();
+        User? user = await _userContextAccessor.GetCurrentUserAsync();
 
         if (user is null)
         {

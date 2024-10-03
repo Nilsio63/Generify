@@ -18,7 +18,7 @@ public class TrackInfoService : ITrackInfoService
         _spotifyClientFactory = spotifyClientFactory;
     }
 
-    public async Task<TrackInfo> GetByIdAsync(string trackId)
+    public async Task<TrackInfo?> GetByIdAsync(string trackId)
     {
         ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
 
@@ -101,17 +101,15 @@ public class TrackInfoService : ITrackInfoService
 
     private TrackInfo Map(FullTrack track)
     {
-        return track is null
-            ? null
-            : new TrackInfo
-            {
-                Id = track.Id,
-                Uri = track.Uri,
-                Title = track.Name,
-                AlbumName = track.Album.Name,
-                DiscNumber = track.DiscNumber,
-                TrackNumber = track.TrackNumber,
-                Artists = track.Artists.Select(o => o.Name).ToList()
-            };
+        return new TrackInfo
+        {
+            Id = track.Id,
+            Uri = track.Uri,
+            Title = track.Name,
+            AlbumName = track.Album.Name,
+            DiscNumber = track.DiscNumber,
+            TrackNumber = track.TrackNumber,
+            Artists = track.Artists.Select(o => o.Name).ToList()
+        };
     }
 }

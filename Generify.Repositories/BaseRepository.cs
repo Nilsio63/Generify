@@ -31,7 +31,7 @@ public abstract class BaseRepository<T> : IBaseRepository<T>
             .ToListAsync();
     }
 
-    public async Task<T> GetByIdAsync(string id)
+    public async Task<T?> GetByIdAsync(string id)
     {
         return await BaseSelect
             .Where(o => o.Id == id)

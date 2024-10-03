@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace Generify;
 
@@ -33,9 +34,14 @@ public class Startup
         {
             IConfigurationSection conSection = Configuration.GetSection("Generify").GetSection("Connection");
 
-            string accountEndpoint = conSection.GetValue<string>("Endpoint");
-            string accountKey = conSection.GetValue<string>("AccountKey");
-            string dbName = conSection.GetValue<string>("DataBase");
+            string? accountEndpoint = conSection.GetValue<string>("Endpoint");
+            string? accountKey = conSection.GetValue<string>("AccountKey");
+            string? dbName = conSection.GetValue<string>("DataBase");
+
+            if (string.IsNullOrWhiteSpace(accountEndpoint) || string.IsNullOrWhiteSpace(accountKey) || string.IsNullOrWhiteSpace(dbName))
+            {
+                throw new ArgumentException("Cosmos DB configuration is missing in configuration");
+            }
 
             dbOptions.UseCosmos(accountEndpoint, accountKey, dbName);
         });
@@ -48,15 +54,20 @@ public class Startup
 
             string hostAddress = navManager.BaseUri.ToString().Replace("https://", "").TrimEnd('/');
 
-            string clientId = Configuration
+            string? clientId = Configuration
                 .GetSection("Generify")
                 .GetSection("External")
                 .GetValue<string>("ClientId");
 
-            string clientSecret = Configuration
+            string? clientSecret = Configuration
                 .GetSection("Generify")
                 .GetSection("External")
                 .GetValue<string>("ClientSecret");
+
+            if (string.IsNullOrWhiteSpace(clientId) || string.IsNullOrWhiteSpace(clientSecret))
+            {
+                throw new ArgumentException("Client ID or Client Secret missing in configuration");
+            }
 
             return new ExternalAuthSettings(clientId, clientSecret, $"https://{hostAddress}/authCallback");
         });

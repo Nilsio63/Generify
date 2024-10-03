@@ -5,10 +5,10 @@ namespace Generify.Models.Playlists;
 
 public class PlaylistDefinition : Entity
 {
-    public string TargetPlaylistId { get; set; }
-    public string UserId { get; set; }
+    public string TargetPlaylistId { get; set; } = string.Empty;
+    public string UserId { get; set; } = string.Empty;
 
-    public User User { get; set; }
-    public List<PlaylistSource> PlaylistSources { get; set; }
-    public List<OrderInstruction> OrderInstructions { get; set; }
+    public User User { get; set; } = new();
+    public List<PlaylistSource> PlaylistSources { get; set; } = [];
+    public List<OrderInstruction> OrderInstructions { get; set; } = [];
 }

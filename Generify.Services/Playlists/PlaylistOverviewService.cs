@@ -30,6 +30,7 @@ public class PlaylistOverviewService : IPlaylistOverviewService
             {
                 Def = o,
                 Playlist = await _playlistInfoService.GetPlaylistInfoAsync(o.TargetPlaylistId)
+                    ?? throw new KeyNotFoundException($"Could not find playlist with id {o.TargetPlaylistId}")
             })
             .Select(o => new PlaylistOverview
             {

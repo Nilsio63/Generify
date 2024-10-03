@@ -21,19 +21,21 @@
 
 @code {
     [Parameter]
-    public string PlaylistId { get; set; }
+    public string PlaylistId { get; set; } = string.Empty;
 
     public bool IsLoading { get; set; }
 
-    public PlaylistDefinition Playlist { get; set; }
+    public PlaylistDefinition? Playlist { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         IsLoading = true;
 
-        User user = await _userAuthService.GetCurrentUserAsync();
+        User? user = await _userAuthService.GetCurrentUserAsync();
 
-        Playlist = await _playlistDefService.GetByIdForUserAsync(PlaylistId, user.Id);
+        Playlist = user is not null
+            ? await _playlistDefService.GetByIdForUserAsync(PlaylistId, user.Id)
+            : null;
 
         IsLoading = false;
     }

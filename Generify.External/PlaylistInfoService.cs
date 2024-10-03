@@ -16,7 +16,7 @@ public class PlaylistInfoService : IPlaylistInfoService
         _spotifyClientFactory = spotifyClientFactory;
     }
 
-    public async Task<PlaylistInfo> GetPlaylistInfoAsync(string playlistId)
+    public async Task<PlaylistInfo?> GetPlaylistInfoAsync(string playlistId)
     {
         ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
 
@@ -26,8 +26,8 @@ public class PlaylistInfoService : IPlaylistInfoService
             ? null
             : new PlaylistInfo
             {
-                Id = playlist.Id,
-                Name = playlist.Name,
+                Id = playlist.Id!,
+                Name = playlist.Name!,
                 Description = HttpUtility.HtmlDecode(playlist.Description)
             };
     }

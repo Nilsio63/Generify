@@ -25,7 +25,7 @@ public class PlaylistDefinitionService : IPlaylistDefinitionService
         return await _playlistDefinitionRepo.GetAllByUserIdAsync(userId);
     }
 
-    public async Task<PlaylistDefinition> GetByIdForUserAsync(string playlistId, string userId)
+    public async Task<PlaylistDefinition?> GetByIdForUserAsync(string playlistId, string userId)
     {
         return await _playlistDefinitionRepo.GetByIdForUserAsync(playlistId, userId);
     }
@@ -37,7 +37,7 @@ public class PlaylistDefinitionService : IPlaylistDefinitionService
 
     public async Task ExecuteGenerationAsync(string playlistDefinitionId)
     {
-        PlaylistDefinition playlistDef = await _playlistDefinitionRepo.GetByIdAsync(playlistDefinitionId);
+        PlaylistDefinition? playlistDef = await _playlistDefinitionRepo.GetByIdAsync(playlistDefinitionId);
 
         if (playlistDef == null)
         {
@@ -59,7 +59,7 @@ public class PlaylistDefinitionService : IPlaylistDefinitionService
 
                 return o;
             })
-            .ToList();
+            .ToList() ?? [];
 
         playlistDefinition.OrderInstructions = playlistDefinition.OrderInstructions?
             .OrderBy(o => o.OrderNr)
@@ -69,7 +69,7 @@ public class PlaylistDefinitionService : IPlaylistDefinitionService
 
                 return o;
             })
-            .ToList();
+            .ToList() ?? [];
 
         await _playlistDefinitionRepo.SaveAsync(playlistDefinition);
     }

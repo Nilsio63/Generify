@@ -5,8 +5,8 @@ namespace Generify.Models.Management;
 
 public class User : Entity
 {
-    public string SpotifyId { get; set; }
-    public string RefreshToken { get; set; }
+    public string SpotifyId { get; set; } = string.Empty;
+    public string RefreshToken { get; set; } = string.Empty;
 
-    public List<PlaylistDefinition> PlaylistDefinitions { get; set; }
+    public List<PlaylistDefinition> PlaylistDefinitions { get; set; } = [];
 }

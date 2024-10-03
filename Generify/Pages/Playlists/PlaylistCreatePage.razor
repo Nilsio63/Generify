@@ -1,5 +1,6 @@
 ﻿@page "/playlists/create"
 @attribute [Authorize]
+@inject NavigationManager _navManager
 @inject IUserAuthService _userAuthService
 
 <h3>Create playlist definition</h3>
@@ -7,11 +8,18 @@
 <PlaylistEditComponent Playlist="Playlist" />
 
 @code {
-    public PlaylistDefinition Playlist { get; set; }
+    public PlaylistDefinition Playlist { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        User user = await _userAuthService.GetCurrentUserAsync();
+        User? user = await _userAuthService.GetCurrentUserAsync();
+
+        if (user is null)
+        {
+            _navManager.NavigateTo("/");
+
+            return;
+        }
 
         Playlist = new PlaylistDefinition
         {
