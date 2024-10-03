@@ -1,11 +1,10 @@
-﻿namespace Generify.Models.Enums
+﻿namespace Generify.Models.Enums;
+
+public enum SourceType
 {
-    public enum SourceType
-    {
-        Album,
-        Artist,
-        Library,
-        Playlist,
-        Track
-    }
+    Album,
+    Artist,
+    Library,
+    Playlist,
+    Track
 }

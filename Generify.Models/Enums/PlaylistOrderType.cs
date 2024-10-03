@@ -1,10 +1,9 @@
-﻿namespace Generify.Models.Enums
+﻿namespace Generify.Models.Enums;
+
+public enum PlaylistOrderType
 {
-    public enum PlaylistOrderType
-    {
-        ArtistName,
-        Title,
-        AlbumName,
-        TrackNr
-    }
+    ArtistName,
+    Title,
+    AlbumName,
+    TrackNr
 }

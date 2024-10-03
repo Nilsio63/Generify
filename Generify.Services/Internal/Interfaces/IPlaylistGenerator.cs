@@ -1,10 +1,9 @@
 ﻿using Generify.Models.Playlists;
 using System.Threading.Tasks;
 
-namespace Generify.Services.Internal.Interfaces
+namespace Generify.Services.Internal.Interfaces;
+
+public interface IPlaylistGenerator
 {
-    public interface IPlaylistGenerator
-    {
-        Task ExecuteGenerationAsync(PlaylistDefinition playlistDefinition);
-    }
+    Task ExecuteGenerationAsync(PlaylistDefinition playlistDefinition);
 }

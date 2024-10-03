@@ -2,10 +2,9 @@
 using Generify.Services.Internal.Models;
 using System.Threading.Tasks;
 
-namespace Generify.Services.Internal.Interfaces
+namespace Generify.Services.Internal.Interfaces;
+
+public interface IPlaylistGenerationContextBuilder
 {
-    public interface IPlaylistGenerationContextBuilder
-    {
-        Task<PlaylistGenerationContext> CreateContextAsync(PlaylistDefinition playlistDefinition);
-    }
+    Task<PlaylistGenerationContext> CreateContextAsync(PlaylistDefinition playlistDefinition);
 }

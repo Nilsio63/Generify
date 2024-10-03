@@ -1,9 +1,8 @@
-﻿namespace Generify.External.Abstractions.Settings
+﻿namespace Generify.External.Abstractions.Settings;
+
+public interface IExternalAuthSettings
 {
-    public interface IExternalAuthSettings
-    {
-        string ClientId { get; }
-        string ClientSecret { get; }
-        string CallbackUrl { get; }
-    }
+    string ClientId { get; }
+    string ClientSecret { get; }
+    string CallbackUrl { get; }
 }

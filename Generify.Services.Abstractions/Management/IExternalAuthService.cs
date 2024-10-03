@@ -1,11 +1,10 @@
 ﻿using Generify.Models.Management;
 using System.Threading.Tasks;
 
-namespace Generify.Services.Abstractions.Management
+namespace Generify.Services.Abstractions.Management;
+
+public interface IExternalAuthService
 {
-    public interface IExternalAuthService
-    {
-        string GetExternalLoginUrl();
-        Task<User> SaveAccessTokenAsync(string accessToken);
-    }
+    string GetExternalLoginUrl();
+    Task<User> SaveAccessTokenAsync(string accessToken);
 }

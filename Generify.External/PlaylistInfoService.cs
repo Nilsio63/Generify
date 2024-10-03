@@ -5,31 +5,30 @@ using SpotifyAPI.Web;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace Generify.External
+namespace Generify.External;
+
+public class PlaylistInfoService : IPlaylistInfoService
 {
-    public class PlaylistInfoService : IPlaylistInfoService
+    private readonly ISpotifyClientFactory _spotifyClientFactory;
+
+    public PlaylistInfoService(ISpotifyClientFactory spotifyClientFactory)
     {
-        private readonly ISpotifyClientFactory _spotifyClientFactory;
+        _spotifyClientFactory = spotifyClientFactory;
+    }
 
-        public PlaylistInfoService(ISpotifyClientFactory spotifyClientFactory)
-        {
-            _spotifyClientFactory = spotifyClientFactory;
-        }
+    public async Task<PlaylistInfo> GetPlaylistInfoAsync(string playlistId)
+    {
+        ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
 
-        public async Task<PlaylistInfo> GetPlaylistInfoAsync(string playlistId)
-        {
-            ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
+        FullPlaylist playlist = await client.Playlists.Get(playlistId);
 
-            FullPlaylist playlist = await client.Playlists.Get(playlistId);
-
-            return playlist is null
-                ? null
-                : new PlaylistInfo
-                {
-                    Id = playlist.Id,
-                    Name = playlist.Name,
-                    Description = HttpUtility.HtmlDecode(playlist.Description)
-                };
-        }
+        return playlist is null
+            ? null
+            : new PlaylistInfo
+            {
+                Id = playlist.Id,
+                Name = playlist.Name,
+                Description = HttpUtility.HtmlDecode(playlist.Description)
+            };
     }
 }

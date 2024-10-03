@@ -1,8 +1,7 @@
-﻿namespace Generify.Models.Enums
+﻿namespace Generify.Models.Enums;
+
+public enum PlaylistOrderDirection
 {
-    public enum PlaylistOrderDirection
-    {
-        Ascending,
-        Descending
-    }
+    Ascending,
+    Descending
 }

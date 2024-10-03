@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Generify.Services.Abstractions.Playlists
+namespace Generify.Services.Abstractions.Playlists;
+
+public interface IPlaylistOverviewService
 {
-    public interface IPlaylistOverviewService
-    {
-        Task<List<PlaylistOverview>> GetAllByUserIdAsync(string userId);
-    }
+    Task<List<PlaylistOverview>> GetAllByUserIdAsync(string userId);
 }

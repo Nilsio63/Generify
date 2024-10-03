@@ -2,12 +2,11 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Threading.Tasks;
 
-namespace Generify.Services
+namespace Generify.Services;
+
+public interface IGenerifyAuthenticationStateProvider
 {
-    public interface IGenerifyAuthenticationStateProvider
-    {
-        Task<AuthenticationState> GetAuthenticationStateAsync();
-        Task SetAuthenticatedAsync(User user);
-        Task RemoveAuthenticatedAsync();
-    }
+    Task<AuthenticationState> GetAuthenticationStateAsync();
+    Task SetAuthenticatedAsync(User user);
+    Task RemoveAuthenticatedAsync();
 }

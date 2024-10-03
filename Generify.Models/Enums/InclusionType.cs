@@ -1,8 +1,7 @@
-﻿namespace Generify.Models.Enums
+﻿namespace Generify.Models.Enums;
+
+public enum InclusionType
 {
-    public enum InclusionType
-    {
-        Include,
-        Exclude
-    }
+    Include,
+    Exclude
 }

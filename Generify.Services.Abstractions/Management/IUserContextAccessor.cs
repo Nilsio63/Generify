@@ -1,10 +1,9 @@
 ﻿using Generify.Models.Management;
 using System.Threading.Tasks;
 
-namespace Generify.Services.Abstractions.Management
+namespace Generify.Services.Abstractions.Management;
+
+public interface IUserContextAccessor
 {
-    public interface IUserContextAccessor
-    {
-        Task<User> GetCurrentUserAsync();
-    }
+    Task<User> GetCurrentUserAsync();
 }

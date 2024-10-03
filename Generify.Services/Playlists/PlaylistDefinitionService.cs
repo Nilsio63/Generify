@@ -6,77 +6,76 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Generify.Services.Playlists
+namespace Generify.Services.Playlists;
+
+public class PlaylistDefinitionService : IPlaylistDefinitionService
 {
-    public class PlaylistDefinitionService : IPlaylistDefinitionService
+    private readonly IPlaylistGenerator _playlistGenerator;
+    private readonly IPlaylistDefinitionRepository _playlistDefinitionRepo;
+
+    public PlaylistDefinitionService(IPlaylistGenerator playlistGenerator,
+        IPlaylistDefinitionRepository playlistDefinitionRepo)
     {
-        private readonly IPlaylistGenerator _playlistGenerator;
-        private readonly IPlaylistDefinitionRepository _playlistDefinitionRepo;
+        _playlistGenerator = playlistGenerator;
+        _playlistDefinitionRepo = playlistDefinitionRepo;
+    }
 
-        public PlaylistDefinitionService(IPlaylistGenerator playlistGenerator,
-            IPlaylistDefinitionRepository playlistDefinitionRepo)
+    public async Task<List<PlaylistDefinition>> GetAllByUserIdAsync(string userId)
+    {
+        return await _playlistDefinitionRepo.GetAllByUserIdAsync(userId);
+    }
+
+    public async Task<PlaylistDefinition> GetByIdForUserAsync(string playlistId, string userId)
+    {
+        return await _playlistDefinitionRepo.GetByIdForUserAsync(playlistId, userId);
+    }
+
+    public async Task LoadDetailsAsync(PlaylistDefinition playlistDefinition)
+    {
+        await _playlistDefinitionRepo.LoadDetailsAsync(playlistDefinition);
+    }
+
+    public async Task ExecuteGenerationAsync(string playlistDefinitionId)
+    {
+        PlaylistDefinition playlistDef = await _playlistDefinitionRepo.GetByIdAsync(playlistDefinitionId);
+
+        if (playlistDef == null)
         {
-            _playlistGenerator = playlistGenerator;
-            _playlistDefinitionRepo = playlistDefinitionRepo;
+            return;
         }
 
-        public async Task<List<PlaylistDefinition>> GetAllByUserIdAsync(string userId)
-        {
-            return await _playlistDefinitionRepo.GetAllByUserIdAsync(userId);
-        }
+        await _playlistDefinitionRepo.LoadDetailsAsync(playlistDef);
 
-        public async Task<PlaylistDefinition> GetByIdForUserAsync(string playlistId, string userId)
-        {
-            return await _playlistDefinitionRepo.GetByIdForUserAsync(playlistId, userId);
-        }
+        await _playlistGenerator.ExecuteGenerationAsync(playlistDef);
+    }
 
-        public async Task LoadDetailsAsync(PlaylistDefinition playlistDefinition)
-        {
-            await _playlistDefinitionRepo.LoadDetailsAsync(playlistDefinition);
-        }
-
-        public async Task ExecuteGenerationAsync(string playlistDefinitionId)
-        {
-            PlaylistDefinition playlistDef = await _playlistDefinitionRepo.GetByIdAsync(playlistDefinitionId);
-
-            if (playlistDef == null)
+    public async Task SaveAsync(PlaylistDefinition playlistDefinition)
+    {
+        playlistDefinition.PlaylistSources = playlistDefinition.PlaylistSources?
+            .OrderBy(o => o.OrderNr)
+            .Select((o, i) =>
             {
-                return;
-            }
+                o.OrderNr = i + 1;
 
-            await _playlistDefinitionRepo.LoadDetailsAsync(playlistDef);
+                return o;
+            })
+            .ToList();
 
-            await _playlistGenerator.ExecuteGenerationAsync(playlistDef);
-        }
+        playlistDefinition.OrderInstructions = playlistDefinition.OrderInstructions?
+            .OrderBy(o => o.OrderNr)
+            .Select((o, i) =>
+            {
+                o.OrderNr = i + 1;
 
-        public async Task SaveAsync(PlaylistDefinition playlistDefinition)
-        {
-            playlistDefinition.PlaylistSources = playlistDefinition.PlaylistSources?
-                .OrderBy(o => o.OrderNr)
-                .Select((o, i) =>
-                {
-                    o.OrderNr = i + 1;
+                return o;
+            })
+            .ToList();
 
-                    return o;
-                })
-                .ToList();
+        await _playlistDefinitionRepo.SaveAsync(playlistDefinition);
+    }
 
-            playlistDefinition.OrderInstructions = playlistDefinition.OrderInstructions?
-                .OrderBy(o => o.OrderNr)
-                .Select((o, i) =>
-                {
-                    o.OrderNr = i + 1;
-
-                    return o;
-                })
-                .ToList();
-
-            await _playlistDefinitionRepo.SaveAsync(playlistDefinition);
-        }
-
-        public async Task DeleteAsync(PlaylistDefinition playlistDefinition)
-        {
-            await _playlistDefinitionRepo.DeleteAsync(playlistDefinition);
-        }
+    public async Task DeleteAsync(PlaylistDefinition playlistDefinition)
+    {
+        await _playlistDefinitionRepo.DeleteAsync(playlistDefinition);
     }
 }

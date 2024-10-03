@@ -3,25 +3,24 @@ using Generify.Repositories.Abstractions.Management;
 using Generify.Services.Abstractions.Management;
 using System.Threading.Tasks;
 
-namespace Generify.Services.Management
+namespace Generify.Services.Management;
+
+public class UserService : IUserService
 {
-    public class UserService : IUserService
+    private readonly IUserRepository _userRepo;
+
+    public UserService(IUserRepository userRepo)
     {
-        private readonly IUserRepository _userRepo;
+        _userRepo = userRepo;
+    }
 
-        public UserService(IUserRepository userRepo)
-        {
-            _userRepo = userRepo;
-        }
+    public async Task<User> GetByIdAsync(string userId)
+    {
+        return await _userRepo.GetByIdAsync(userId);
+    }
 
-        public async Task<User> GetByIdAsync(string userId)
-        {
-            return await _userRepo.GetByIdAsync(userId);
-        }
-
-        public async Task<User> SaveAsync(User user)
-        {
-            return await _userRepo.SaveAsync(user);
-        }
+    public async Task<User> SaveAsync(User user)
+    {
+        return await _userRepo.SaveAsync(user);
     }
 }

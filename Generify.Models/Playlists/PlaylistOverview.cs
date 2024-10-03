@@ -1,10 +1,9 @@
-﻿namespace Generify.Models.Playlists
-{
-    public class PlaylistOverview
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
+﻿namespace Generify.Models.Playlists;
 
-        public PlaylistDefinition Definition { get; set; }
-    }
+public class PlaylistOverview
+{
+    public string Name { get; set; }
+    public string Description { get; set; }
+
+    public PlaylistDefinition Definition { get; set; }
 }

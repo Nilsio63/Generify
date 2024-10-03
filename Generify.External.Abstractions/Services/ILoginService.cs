@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 
-namespace Generify.External.Abstractions.Services
+namespace Generify.External.Abstractions.Services;
+
+public interface ILoginService
 {
-    public interface ILoginService
-    {
-        string GetExternalLoginUrl();
-        Task<string> GetRefreshTokenAsync(string accessToken);
-    }
+    string GetExternalLoginUrl();
+    Task<string> GetRefreshTokenAsync(string accessToken);
 }

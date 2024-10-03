@@ -6,50 +6,49 @@ using MoreLinq;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Generify.Services.Internal
+namespace Generify.Services.Internal;
+
+public class PlaylistSyncWorker : IPlaylistSyncWorker
 {
-    public class PlaylistSyncWorker : IPlaylistSyncWorker
+    private readonly IPlaylistEditService _playlistEditService;
+
+    public PlaylistSyncWorker(IPlaylistEditService playlistEditService)
     {
-        private readonly IPlaylistEditService _playlistEditService;
+        _playlistEditService = playlistEditService;
+    }
 
-        public PlaylistSyncWorker(IPlaylistEditService playlistEditService)
+    public async Task SyncTracksAsync(PlaylistGenerationContext context)
+    {
+        TrackInfo[] toDelete = context.TargetTracks
+            .Where(t => !context.SourceTracks.Any(s => s.Id == t.Id))
+            .ToArray();
+
+        TrackInfo[] toAdd = context.SourceTracks
+            .Where(s => !context.TargetTracks.Any(t => t.Id == s.Id))
+            .ToArray();
+
+        await _playlistEditService.RemoveTracksFromPlaylistAsync(context.TargetPlaylist.Id, toDelete);
+        await _playlistEditService.AddTracksToPlaylistAsync(context.TargetPlaylist.Id, toAdd);
+
+        context.TargetTracks = context.TargetTracks
+            .Except(toDelete)
+            .Concat(toAdd)
+            .ToList();
+    }
+
+    public async Task SyncSortingAsync(PlaylistGenerationContext context)
+    {
+        for (int i = 0; i < context.SourceTracks.Count; i++)
         {
-            _playlistEditService = playlistEditService;
-        }
+            TrackInfo track = context.SourceTracks[i];
 
-        public async Task SyncTracksAsync(PlaylistGenerationContext context)
-        {
-            TrackInfo[] toDelete = context.TargetTracks
-                .Where(t => !context.SourceTracks.Any(s => s.Id == t.Id))
-                .ToArray();
+            int curIndex = context.TargetTracks.FindIndex(o => o.Id == track.Id);
 
-            TrackInfo[] toAdd = context.SourceTracks
-                .Where(s => !context.TargetTracks.Any(t => t.Id == s.Id))
-                .ToArray();
-
-            await _playlistEditService.RemoveTracksFromPlaylistAsync(context.TargetPlaylist.Id, toDelete);
-            await _playlistEditService.AddTracksToPlaylistAsync(context.TargetPlaylist.Id, toAdd);
-
-            context.TargetTracks = context.TargetTracks
-                .Except(toDelete)
-                .Concat(toAdd)
-                .ToList();
-        }
-
-        public async Task SyncSortingAsync(PlaylistGenerationContext context)
-        {
-            for (int i = 0; i < context.SourceTracks.Count; i++)
+            if (curIndex != i)
             {
-                TrackInfo track = context.SourceTracks[i];
+                await _playlistEditService.ReorderTracksInPlaylistAsync(context.TargetPlaylist.Id, curIndex, i);
 
-                int curIndex = context.TargetTracks.FindIndex(o => o.Id == track.Id);
-
-                if (curIndex != i)
-                {
-                    await _playlistEditService.ReorderTracksInPlaylistAsync(context.TargetPlaylist.Id, curIndex, i);
-
-                    context.TargetTracks = context.TargetTracks.Move(curIndex, 1, i).ToList();
-                }
+                context.TargetTracks = context.TargetTracks.Move(curIndex, 1, i).ToList();
             }
         }
     }

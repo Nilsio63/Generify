@@ -1,15 +1,14 @@
 ﻿using Generify.Models.Management;
 using System.Collections.Generic;
 
-namespace Generify.Models.Playlists
-{
-    public class PlaylistDefinition : Entity
-    {
-        public string TargetPlaylistId { get; set; }
-        public string UserId { get; set; }
+namespace Generify.Models.Playlists;
 
-        public User User { get; set; }
-        public List<PlaylistSource> PlaylistSources { get; set; }
-        public List<OrderInstruction> OrderInstructions { get; set; }
-    }
+public class PlaylistDefinition : Entity
+{
+    public string TargetPlaylistId { get; set; }
+    public string UserId { get; set; }
+
+    public User User { get; set; }
+    public List<PlaylistSource> PlaylistSources { get; set; }
+    public List<OrderInstruction> OrderInstructions { get; set; }
 }

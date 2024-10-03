@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Generify.Repositories.Abstractions.Playlists
-{
-    public interface IPlaylistDefinitionRepository : IBaseRepository<PlaylistDefinition>
-    {
-        Task<List<PlaylistDefinition>> GetAllByUserIdAsync(string userId);
-        Task<PlaylistDefinition> GetByIdForUserAsync(string playlistId, string userId);
+namespace Generify.Repositories.Abstractions.Playlists;
 
-        Task LoadDetailsAsync(PlaylistDefinition playlistDefinition);
-    }
+public interface IPlaylistDefinitionRepository : IBaseRepository<PlaylistDefinition>
+{
+    Task<List<PlaylistDefinition>> GetAllByUserIdAsync(string userId);
+    Task<PlaylistDefinition> GetByIdForUserAsync(string playlistId, string userId);
+
+    Task LoadDetailsAsync(PlaylistDefinition playlistDefinition);
 }

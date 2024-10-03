@@ -3,52 +3,51 @@ using Generify.Models.Management;
 using Generify.Services.Abstractions.Management;
 using System.Threading.Tasks;
 
-namespace Generify.Services
+namespace Generify.Services;
+
+public class UserAuthService : IUserAuthService
 {
-    public class UserAuthService : IUserAuthService
+    private readonly ILocalStorageService _localStorageService;
+    private readonly IGenerifyAuthenticationStateProvider _authStateProvider;
+    private readonly IUserService _userService;
+
+    public UserAuthService(ILocalStorageService localStorageService,
+        IGenerifyAuthenticationStateProvider authStateProvider,
+        IUserService userService)
     {
-        private readonly ILocalStorageService _localStorageService;
-        private readonly IGenerifyAuthenticationStateProvider _authStateProvider;
-        private readonly IUserService _userService;
+        _localStorageService = localStorageService;
+        _authStateProvider = authStateProvider;
+        _userService = userService;
+    }
 
-        public UserAuthService(ILocalStorageService localStorageService,
-            IGenerifyAuthenticationStateProvider authStateProvider,
-            IUserService userService)
+    public async Task<bool> IsUserLoggedInAsync()
+    {
+        string userId = await _localStorageService.GetItemAsync<string>("userId");
+
+        return !string.IsNullOrWhiteSpace(userId);
+    }
+
+    public async Task<User> GetCurrentUserAsync()
+    {
+        string userId = await _localStorageService.GetItemAsync<string>("userId");
+
+        if (string.IsNullOrWhiteSpace(userId))
         {
-            _localStorageService = localStorageService;
-            _authStateProvider = authStateProvider;
-            _userService = userService;
+            return null;
         }
 
-        public async Task<bool> IsUserLoggedInAsync()
-        {
-            string userId = await _localStorageService.GetItemAsync<string>("userId");
+        User user = await _userService.GetByIdAsync(userId);
 
-            return !string.IsNullOrWhiteSpace(userId);
-        }
+        return user;
+    }
 
-        public async Task<User> GetCurrentUserAsync()
-        {
-            string userId = await _localStorageService.GetItemAsync<string>("userId");
+    public async Task LoginAsync(User user)
+    {
+        await _authStateProvider.SetAuthenticatedAsync(user);
+    }
 
-            if (string.IsNullOrWhiteSpace(userId))
-            {
-                return null;
-            }
-
-            User user = await _userService.GetByIdAsync(userId);
-
-            return user;
-        }
-
-        public async Task LoginAsync(User user)
-        {
-            await _authStateProvider.SetAuthenticatedAsync(user);
-        }
-
-        public async Task LogoutAsync()
-        {
-            await _authStateProvider.RemoveAuthenticatedAsync();
-        }
+    public async Task LogoutAsync()
+    {
+        await _authStateProvider.RemoveAuthenticatedAsync();
     }
 }

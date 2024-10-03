@@ -1,11 +1,10 @@
 ﻿using Generify.Services.Internal.Models;
 using System.Threading.Tasks;
 
-namespace Generify.Services.Internal.Interfaces
+namespace Generify.Services.Internal.Interfaces;
+
+public interface IPlaylistSyncWorker
 {
-    public interface IPlaylistSyncWorker
-    {
-        Task SyncTracksAsync(PlaylistGenerationContext context);
-        Task SyncSortingAsync(PlaylistGenerationContext context);
-    }
+    Task SyncTracksAsync(PlaylistGenerationContext context);
+    Task SyncSortingAsync(PlaylistGenerationContext context);
 }
