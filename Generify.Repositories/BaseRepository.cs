@@ -1,6 +1,7 @@
 ﻿using Generify.Models;
 using Generify.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,15 +27,19 @@ public abstract class BaseRepository<T> : IBaseRepository<T>
 
     public async Task<List<T>> GetAllByIdListAsync(IEnumerable<string> idList)
     {
+        Guid[] guidList = idList.Select(Guid.Parse).ToArray();
+
         return await BaseSelect
-            .Where(o => idList.Contains(o.Id))
+            .Where(o => guidList.Contains(o.Id))
             .ToListAsync();
     }
 
     public async Task<T?> GetByIdAsync(string id)
     {
+        Guid guid = Guid.Parse(id);
+
         return await BaseSelect
-            .Where(o => o.Id == id)
+            .Where(o => o.Id == guid)
             .FirstOrDefaultAsync();
     }
 
@@ -53,7 +58,7 @@ public abstract class BaseRepository<T> : IBaseRepository<T>
 
         foreach (T obj in objectList)
         {
-            if (string.IsNullOrWhiteSpace(obj.Id))
+            if (obj.Id == Guid.Empty)
             {
                 DbSet.Add(obj);
             }

@@ -1,0 +1,29 @@
+services:
+  generify-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__Default=Server=mysql-db;Port=3306;Database=generify;User=root;Password=TestPassword123!
+      - Generify__External__ClientId=YOUR_SPOTIFY_CLIENT_ID
+      - Generify__External__ClientSecret=YOUR_SPOTIFY_CLIENT_SECRET
+
+  mysql-db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: TestPassword123!
+      MYSQL_DATABASE: generify
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 10
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data: {}

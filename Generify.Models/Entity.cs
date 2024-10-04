@@ -1,6 +1,8 @@
-﻿namespace Generify.Models;
+﻿using System;
+
+namespace Generify.Models;
 
 public abstract class Entity
 {
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
 }

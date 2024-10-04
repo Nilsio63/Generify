@@ -62,7 +62,7 @@ public class GenerifyAuthenticationStateProvider : AuthenticationStateProvider, 
     {
         return new ClaimsIdentity(new[]
         {
-            new Claim(ClaimTypes.Name, user.Id)
+            new Claim(ClaimTypes.Name, user.Id.ToString())
         }, "apiauth_type");
     }
 }

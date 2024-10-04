@@ -2,6 +2,7 @@
 using Generify.Repositories.Abstractions.Playlists;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,16 +18,21 @@ public class PlaylistDefinitionRepository : BaseRepository<PlaylistDefinition>, 
 
     public async Task<List<PlaylistDefinition>> GetAllByUserIdAsync(string userId)
     {
+        Guid userGuid = Guid.Parse(userId);
+
         return await BaseSelect
-            .Where(o => o.UserId == userId)
+            .Where(o => o.UserId == userGuid)
             .ToListAsync();
     }
 
     public async Task<PlaylistDefinition?> GetByIdForUserAsync(string playlistId, string userId)
     {
+        Guid playlistGuid = Guid.Parse(playlistId);
+        Guid userGuid = Guid.Parse(userId);
+
         return await BaseSelect
-            .Where(o => o.Id == playlistId
-                && o.UserId == userId)
+            .Where(o => o.Id == playlistGuid
+                && o.UserId == userGuid)
             .FirstOrDefaultAsync();
     }
 

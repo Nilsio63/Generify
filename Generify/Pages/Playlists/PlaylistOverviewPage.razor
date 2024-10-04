@@ -27,7 +27,7 @@
 
         if (user is not null)
         {
-            PlaylistDefinitions = await _playlistOverviewService.GetAllByUserIdAsync(user.Id);
+            PlaylistDefinitions = await _playlistOverviewService.GetAllByUserIdAsync(user.Id.ToString());
         }
     }
 }

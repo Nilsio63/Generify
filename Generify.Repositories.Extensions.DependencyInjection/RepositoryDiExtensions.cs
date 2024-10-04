@@ -14,6 +14,7 @@ public static class RepositoryDiExtensions
     {
         return services
             .AddDbContext<GenerifyDataContext>(dbOptionsAction.Invoke)
+            .AddTransient<IDbMigrator, DbMigrator>()
             .AddTransient<IPlaylistDefinitionRepository, PlaylistDefinitionRepository>()
             .AddTransient<IUserRepository, UserRepository>();
     }

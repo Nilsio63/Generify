@@ -22,14 +22,15 @@ public class GenerifyDataContext : DbContext
         {
             e.HasKey(o => o.Id);
             e.Property(o => o.Id).ValueGeneratedOnAdd();
-            e.Property(o => o.RefreshToken).IsRequired(false);
+            e.Property(o => o.SpotifyId).IsRequired().HasMaxLength(255);
+            e.Property(o => o.RefreshToken).IsRequired().HasMaxLength(255);
         });
 
         modelBuilder.Entity<PlaylistDefinition>(e =>
         {
             e.HasKey(o => o.Id);
             e.Property(o => o.Id).ValueGeneratedOnAdd();
-            e.Property(o => o.TargetPlaylistId).IsRequired();
+            e.Property(o => o.TargetPlaylistId).IsRequired().HasMaxLength(255);
             e.Property(o => o.UserId).IsRequired();
 
             e.HasOne(o => o.User).WithMany(o => o.PlaylistDefinitions).HasForeignKey(o => o.UserId).IsRequired();
@@ -39,7 +40,7 @@ public class GenerifyDataContext : DbContext
         {
             e.HasKey(o => o.Id);
             e.Property(o => o.Id).ValueGeneratedOnAdd();
-            e.Property(o => o.SourceId).IsRequired();
+            e.Property(o => o.SourceId).IsRequired().HasMaxLength(255);
             e.Property(o => o.SourceType).IsRequired();
             e.Property(o => o.InclusionType).IsRequired();
 

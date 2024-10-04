@@ -40,7 +40,7 @@
 
         try
         {
-            await _playlistDefService.ExecuteGenerationAsync(playlist.Definition.Id);
+            await _playlistDefService.ExecuteGenerationAsync(playlist.Definition.Id.ToString());
         }
         catch (Exception ex)
         {

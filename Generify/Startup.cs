@@ -32,18 +32,14 @@ public class Startup
     {
         services.AddGenerifyRepos(dbOptions =>
         {
-            IConfigurationSection conSection = Configuration.GetSection("Generify").GetSection("Connection");
+            string? connectionString = Configuration.GetConnectionString("Default");
 
-            string? accountEndpoint = conSection.GetValue<string>("Endpoint");
-            string? accountKey = conSection.GetValue<string>("AccountKey");
-            string? dbName = conSection.GetValue<string>("DataBase");
-
-            if (string.IsNullOrWhiteSpace(accountEndpoint) || string.IsNullOrWhiteSpace(accountKey) || string.IsNullOrWhiteSpace(dbName))
+            if (string.IsNullOrWhiteSpace(connectionString))
             {
-                throw new ArgumentException("Cosmos DB configuration is missing in configuration");
+                throw new ArgumentException("MySql DB configuration is missing in configuration");
             }
 
-            dbOptions.UseCosmos(accountEndpoint, accountKey, dbName);
+            dbOptions.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
         });
 
         services.AddGenerifyServices();

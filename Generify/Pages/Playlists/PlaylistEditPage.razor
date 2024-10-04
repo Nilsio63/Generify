@@ -34,7 +34,7 @@
         User? user = await _userAuthService.GetCurrentUserAsync();
 
         Playlist = user is not null
-            ? await _playlistDefService.GetByIdForUserAsync(PlaylistId, user.Id)
+            ? await _playlistDefService.GetByIdForUserAsync(PlaylistId, user.Id.ToString())
             : null;
 
         IsLoading = false;
