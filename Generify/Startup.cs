@@ -48,7 +48,7 @@ public class Startup
         {
             NavigationManager navManager = s.GetRequiredService<NavigationManager>();
 
-            string hostAddress = navManager.BaseUri.ToString().Replace("https://", "").TrimEnd('/');
+            string hostAddress = navManager.BaseUri.ToString().Replace("https://", "").Replace("localhost", "127.0.0.1").TrimEnd('/');
 
             string? clientId = Configuration
                 .GetSection("Generify")
