@@ -1,0 +1,13 @@
+<Solution>
+  <Project Path="Generify.External.Abstractions/Generify.External.Abstractions.csproj" />
+  <Project Path="Generify.External.Extensions.DependencyInjection/Generify.External.Extensions.DependencyInjection.csproj" />
+  <Project Path="Generify.External/Generify.External.csproj" />
+  <Project Path="Generify.Models/Generify.Models.csproj" />
+  <Project Path="Generify.Repositories.Abstractions/Generify.Repositories.Abstractions.csproj" />
+  <Project Path="Generify.Repositories.Extensions.DependencyInjection/Generify.Repositories.Extensions.DependencyInjection.csproj" />
+  <Project Path="Generify.Repositories/Generify.Repositories.csproj" />
+  <Project Path="Generify.Services.Abstractions/Generify.Services.Abstractions.csproj" />
+  <Project Path="Generify.Services.Extensions.DependencyInjection/Generify.Services.Extensions.DependencyInjection.csproj" />
+  <Project Path="Generify.Services/Generify.Services.csproj" />
+  <Project Path="Generify/Generify.csproj" />
+</Solution>
