@@ -1,0 +1,76 @@
+﻿@inject NavigationManager _navManager
+@inject IUserAuthService _userAuthService
+@inject IPlaylistDefinitionService _playlistDefService
+@inject IPlaylistOverviewService _playlistOverviewService
+
+@if (Playlist != null)
+{
+    <MudCard Class="mud-height-full">
+        <MudCardHeader>
+            <CardHeaderAvatar>
+                <MudAvatar Color="Color.Secondary">@Playlist.Name.FirstOrDefault()</MudAvatar>
+            </CardHeaderAvatar>
+            <CardHeaderContent>
+                <MudText Typo="Typo.body1">@Playlist.Name</MudText>
+            </CardHeaderContent>
+            <CardHeaderActions>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="() => DeletePlaylistAsync(Playlist)" />
+            </CardHeaderActions>
+        </MudCardHeader>
+        <MudCardContent>
+            <MudText>@Playlist.Description</MudText>
+        </MudCardContent>
+        <MudCardActions>
+            @if (!_isGenerating)
+            {
+                <MudButton Color="Color.Primary" OnClick="() => ExecuteAsync(Playlist)">Generate</MudButton>
+                <MudButton Color="Color.Primary" OnClick="() => EditPlaylistAsync(Playlist.Definition)">Edit</MudButton>
+            }
+            else
+            {
+                <MudText>Generating playlist ...</MudText>
+            }
+        </MudCardActions>
+    </MudCard>
+}
+
+@code {
+    [Parameter]
+    public PlaylistOverview? Playlist { get; set; }
+
+    private string? _errorMessage = null;
+    private bool _isGenerating = false;
+
+    public async Task ExecuteAsync(PlaylistOverview playlist)
+    {
+        _isGenerating = true;
+        _errorMessage = null;
+
+        try
+        {
+            await _playlistDefService.ExecuteGenerationAsync(playlist.Definition.Id.ToString());
+        }
+        catch (Exception ex)
+        {
+            _errorMessage = ex.Message;
+        }
+        finally
+        {
+            _isGenerating = false;
+        }
+    }
+
+    public async Task EditPlaylistAsync(PlaylistDefinition playlist)
+    {
+        await _playlistDefService.LoadDetailsAsync(playlist);
+
+        _navManager.NavigateTo($"/playlists/edit/{playlist.Id}");
+    }
+
+    public async Task DeletePlaylistAsync(PlaylistOverview playlist)
+    {
+        await _playlistDefService.DeleteAsync(playlist.Definition);
+
+        Playlist = null;
+    }
+}

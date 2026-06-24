@@ -1,0 +1,46 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Welcome to Generify</MudText>
+<MudText Class="mb-8">The website to automatically generate your next Spotify playlist <i>(or at least try to)</i></MudText>
+
+<MudAlert Severity="Severity.Warning" ContentAlignment="HorizontalAlignment.Start">
+    Because this is a <b>WORK IN PROGRESS</b> website, please use it at your own risk.
+</MudAlert>
+
+<br />
+<MudText Class="mb-8">There are still quite a lot of things to do, so here is a little overview of all things from the past and future:</MudText>
+
+<MudTimeline TimelineOrientation="TimelineOrientation.Vertical" TimelinePosition="TimelinePosition.Left">
+    <MudTimelineItem Color="Color.Success" Variant="Variant.Filled">
+        <MudAlert Severity="Severity.Success">Create basic Generiy web app with Home and About pages</MudAlert>
+    </MudTimelineItem>
+    <MudTimelineItem Color="Color.Success" Variant="Variant.Filled">
+        <MudAlert Severity="Severity.Success">Implement user registration / login mechanics</MudAlert>
+    </MudTimelineItem>
+    <MudTimelineItem Color="Color.Success" Variant="Variant.Filled">
+        <MudAlert Severity="Severity.Success">Add pages to define simple playlist generation rules</MudAlert>
+    </MudTimelineItem>
+    <MudTimelineItem Color="Color.Success" Variant="Variant.Filled">
+        <MudAlert Severity="Severity.Success">Hook up with Spotify API to actually do stuff</MudAlert>
+    </MudTimelineItem>
+    <MudTimelineItem Color="Color.Success" Variant="Variant.Filled">
+        <MudAlert Severity="Severity.Success">Scrap the own login and go with Spotify directly</MudAlert>
+    </MudTimelineItem>
+    <MudTimelineItem Color="Color.Success" Variant="Variant.Filled">
+        <MudAlert Severity="Severity.Success">Integrate MudBlazor for better UI/UX</MudAlert>
+    </MudTimelineItem>
+    <MudTimelineItem Color="Color.Warning" Variant="Variant.Filled">
+        <MudAlert Severity="Severity.Warning">More options for playlist generators</MudAlert>
+    </MudTimelineItem>
+    <MudTimelineItem Color="Color.Warning" Variant="Variant.Filled">
+        <MudAlert Severity="Severity.Warning">Create user management page</MudAlert>
+    </MudTimelineItem>
+    <MudTimelineItem Color="Color.Warning" Variant="Variant.Filled">
+        <MudAlert Severity="Severity.Warning">Add functionality to auto generate playlists daily</MudAlert>
+    </MudTimelineItem>
+    <MudTimelineItem Color="Color.Warning" Variant="Variant.Filled">
+        <MudAlert Severity="Severity.Warning">Way more very cool stuff</MudAlert>
+    </MudTimelineItem>
+</MudTimeline>

@@ -9,4 +9,5 @@
   <Project Path="Generify.Services.Abstractions/Generify.Services.Abstractions.csproj" />
   <Project Path="Generify.Services.Extensions.DependencyInjection/Generify.Services.Extensions.DependencyInjection.csproj" />
   <Project Path="Generify.Services/Generify.Services.csproj" />
+  <Project Path="Generify/Generify.csproj" />
 </Solution>

@@ -1,0 +1,31 @@
+﻿@page "/logout"
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager _navManager
+
+<PageTitle>Logout</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Logout</MudText>
+
+<AuthorizeView>
+    <Authorized>
+        <MudText>
+            I heard you could (theoretically) click on the button below to rid yourself of this evil endeavour which is called Generify and log yourself out.<br />
+            But we totally do not have trust issues, so you might be able to login afterwards...
+        </MudText>
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ConfirmLogout">Logout</MudButton>
+    </Authorized>
+    <NotAuthorized>
+        <MudText Typo="Typo.body1" Class="mb-8">
+            You successfully logged out of Generify!<br />
+            This makes us really sad ... You know that, right? &#128546;
+        </MudText>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private void ConfirmLogout()
+    {
+        _navManager.NavigateTo("/api/auth/logout", true);
+    }
+}
