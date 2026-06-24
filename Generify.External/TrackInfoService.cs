@@ -1,7 +1,6 @@
 ﻿using Generify.External.Abstractions.Models;
 using Generify.External.Abstractions.Services;
 using Generify.External.Internal.Interfaces;
-using MoreLinq;
 using SpotifyAPI.Web;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,10 +35,8 @@ public class TrackInfoService : ITrackInfoService
         List<SimpleTrack> tracksFromAlbum = await client.Paginate(albumPaginate).ToListAsync();
 
         return await tracksFromAlbum
-            .Batch(50)
             .ToAsyncEnumerable()
-            .Select(async (o, _, _) => await client.Tracks.GetSeveral(new TracksRequest(o.Select(p => p.Id).ToList())))
-            .SelectMany(o => o.Tracks.ToAsyncEnumerable())
+            .Select(async (o, _, ct) => await client.Tracks.Get(o.Id, ct))
             .Select(Map)
             .ToListAsync();
     }
@@ -54,10 +51,8 @@ public class TrackInfoService : ITrackInfoService
             .ToListAsync();
 
         List<FullAlbum> fullAlbumList = await simpleAlbumList
-            .Batch(20)
             .ToAsyncEnumerable()
-            .Select(async (o, _, _) => await client.Albums.GetSeveral(new AlbumsRequest(o.Select(p => p.Id).ToList())))
-            .SelectMany(o => o.Albums.ToAsyncEnumerable())
+            .Select(async (o, _, ct) => await client.Albums.Get(o.Id, ct))
             .ToListAsync();
 
         List<SimpleTrack> simpleTrackList = await fullAlbumList
@@ -66,10 +61,8 @@ public class TrackInfoService : ITrackInfoService
             .ToListAsync();
 
         return await simpleTrackList
-            .Batch(50)
             .ToAsyncEnumerable()
-            .Select(async (o, _, _) => await client.Tracks.GetSeveral(new TracksRequest(o.Select(p => p.Id).ToList())))
-            .SelectMany(o => o.Tracks.ToAsyncEnumerable())
+            .Select(async (o, _, ct) => await client.Tracks.Get(o.Id, ct))
             .Select(Map)
             .ToListAsync();
     }
@@ -78,7 +71,7 @@ public class TrackInfoService : ITrackInfoService
     {
         ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
 
-        Paging<PlaylistTrack<IPlayableItem>> playlistPaginate = await client.Playlists.GetItems(playlistId);
+        Paging<PlaylistTrack<IPlayableItem>> playlistPaginate = await client.Playlists.GetPlaylistItems(playlistId);
 
         return await client.Paginate(playlistPaginate)
             .Select(o => o.Track)
