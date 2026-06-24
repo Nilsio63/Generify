@@ -2,6 +2,7 @@
 using Generify.External.Abstractions.Services;
 using Generify.External.Internal.Interfaces;
 using SpotifyAPI.Web;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -28,7 +29,8 @@ public class PlaylistInfoService : IPlaylistInfoService
             {
                 Id = playlist.Id!,
                 Name = playlist.Name!,
-                Description = HttpUtility.HtmlDecode(playlist.Description)
+                Description = HttpUtility.HtmlDecode(playlist.Description),
+                ImageUrl = playlist.Images?.OrderByDescending(o => o.Height).FirstOrDefault()?.Url
             };
     }
 }

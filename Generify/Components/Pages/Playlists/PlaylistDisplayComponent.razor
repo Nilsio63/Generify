@@ -8,7 +8,16 @@
     <MudCard Class="mud-height-full">
         <MudCardHeader>
             <CardHeaderAvatar>
-                <MudAvatar Color="Color.Secondary">@Playlist.Name.FirstOrDefault()</MudAvatar>
+                <MudAvatar Size="Size.Large" Rounded="true" Color="Color.Secondary">
+                    @if (!string.IsNullOrWhiteSpace(Playlist.ImageUrl))
+                    {
+                        <MudImage Src="@Playlist.ImageUrl" />
+                    }
+                    else
+                    {
+                        @Playlist.Name.FirstOrDefault()
+                    }
+                </MudAvatar>
             </CardHeaderAvatar>
             <CardHeaderContent>
                 <MudText Typo="Typo.body1">@Playlist.Name</MudText>

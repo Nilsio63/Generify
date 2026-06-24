@@ -36,7 +36,8 @@ public class PlaylistOverviewService : IPlaylistOverviewService
             {
                 Definition = o.Def,
                 Name = o.Playlist.Name,
-                Description = o.Playlist.Description
+                Description = o.Playlist.Description,
+                ImageUrl = o.Playlist.ImageUrl
             })
             .ToListAsync();
     }
