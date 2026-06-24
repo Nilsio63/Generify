@@ -3,7 +3,6 @@ using Generify.External.Abstractions.Settings;
 using Generify.External.Internal;
 using Generify.External.Internal.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace Generify.External.Extensions.DependencyInjection;
 

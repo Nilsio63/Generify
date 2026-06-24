@@ -2,9 +2,6 @@
 using Generify.Models.Playlists;
 using Generify.Repositories.Abstractions.Playlists;
 using Generify.Services.Abstractions.Playlists;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Generify.Services.Playlists;
 

@@ -1,8 +1,6 @@
 ﻿using Generify.Models.Management;
 using Generify.Repositories.Abstractions.Management;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Generify.Repositories.Management;
 

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Generify.External.Abstractions.Services;
+﻿namespace Generify.External.Abstractions.Services;
 
 public interface IUserInfoService
 {

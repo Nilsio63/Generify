@@ -1,8 +1,6 @@
 ﻿using Generify.External.Abstractions.Services;
 using Generify.External.Abstractions.Settings;
 using SpotifyAPI.Web;
-using System;
-using System.Threading.Tasks;
 
 namespace Generify.External;
 
