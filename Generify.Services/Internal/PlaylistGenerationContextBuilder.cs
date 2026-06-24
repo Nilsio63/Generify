@@ -90,7 +90,7 @@ public class PlaylistGenerationContextBuilder : IPlaylistGenerationContextBuilde
         var sourceList = await playlistDefinition.PlaylistSources
             .ToAsyncEnumerable()
             .OrderBy(o => o.OrderNr)
-            .SelectAwait(async o => new
+            .Select(async (o, _, _) => new
             {
                 o.InclusionType,
                 Tracks = await GetFromSourceAsync(o)

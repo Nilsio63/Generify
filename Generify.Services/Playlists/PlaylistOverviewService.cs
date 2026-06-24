@@ -26,7 +26,7 @@ public class PlaylistOverviewService : IPlaylistOverviewService
 
         return await definitions
             .ToAsyncEnumerable()
-            .SelectAwait(async o => new
+            .Select(async (o, _, _) => new
             {
                 Def = o,
                 Playlist = await _playlistInfoService.GetPlaylistInfoAsync(o.TargetPlaylistId)

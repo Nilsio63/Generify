@@ -38,7 +38,7 @@ public class TrackInfoService : ITrackInfoService
         return await tracksFromAlbum
             .Batch(50)
             .ToAsyncEnumerable()
-            .SelectAwait(async o => await client.Tracks.GetSeveral(new TracksRequest(o.Select(p => p.Id).ToList())))
+            .Select(async (o, _, _) => await client.Tracks.GetSeveral(new TracksRequest(o.Select(p => p.Id).ToList())))
             .SelectMany(o => o.Tracks.ToAsyncEnumerable())
             .Select(Map)
             .ToListAsync();
@@ -56,7 +56,7 @@ public class TrackInfoService : ITrackInfoService
         List<FullAlbum> fullAlbumList = await simpleAlbumList
             .Batch(20)
             .ToAsyncEnumerable()
-            .SelectAwait(async o => await client.Albums.GetSeveral(new AlbumsRequest(o.Select(p => p.Id).ToList())))
+            .Select(async (o, _, _) => await client.Albums.GetSeveral(new AlbumsRequest(o.Select(p => p.Id).ToList())))
             .SelectMany(o => o.Albums.ToAsyncEnumerable())
             .ToListAsync();
 
@@ -68,7 +68,7 @@ public class TrackInfoService : ITrackInfoService
         return await simpleTrackList
             .Batch(50)
             .ToAsyncEnumerable()
-            .SelectAwait(async o => await client.Tracks.GetSeveral(new TracksRequest(o.Select(p => p.Id).ToList())))
+            .Select(async (o, _, _) => await client.Tracks.GetSeveral(new TracksRequest(o.Select(p => p.Id).ToList())))
             .SelectMany(o => o.Tracks.ToAsyncEnumerable())
             .Select(Map)
             .ToListAsync();
