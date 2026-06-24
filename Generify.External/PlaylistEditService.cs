@@ -6,18 +6,11 @@ using SpotifyAPI.Web;
 
 namespace Generify.External;
 
-public class PlaylistEditService : IPlaylistEditService
+public class PlaylistEditService(ISpotifyClientFactory spotifyClientFactory) : IPlaylistEditService
 {
-    private readonly ISpotifyClientFactory _spotifyClientFactory;
-
-    public PlaylistEditService(ISpotifyClientFactory spotifyClientFactory)
-    {
-        _spotifyClientFactory = spotifyClientFactory;
-    }
-
     public async Task AddTracksToPlaylistAsync(string playlistId, IEnumerable<TrackInfo> tracks)
     {
-        ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
+        ISpotifyClient client = await spotifyClientFactory.CreateClientAsync();
 
         foreach (IEnumerable<TrackInfo> batch in tracks.Batch(100))
         {
@@ -27,7 +20,7 @@ public class PlaylistEditService : IPlaylistEditService
 
     public async Task RemoveTracksFromPlaylistAsync(string playlistId, IEnumerable<TrackInfo> tracks)
     {
-        ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
+        ISpotifyClient client = await spotifyClientFactory.CreateClientAsync();
 
         foreach (IEnumerable<TrackInfo> batch in tracks.Batch(100))
         {
@@ -42,7 +35,7 @@ public class PlaylistEditService : IPlaylistEditService
 
     public async Task ReorderTracksInPlaylistAsync(string playlistId, int startIndex, int insertBeforeIndex)
     {
-        ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
+        ISpotifyClient client = await spotifyClientFactory.CreateClientAsync();
 
         await client.Playlists.UpdatePlaylistItems(playlistId, new PlaylistReorderItemsRequest(startIndex, insertBeforeIndex));
     }

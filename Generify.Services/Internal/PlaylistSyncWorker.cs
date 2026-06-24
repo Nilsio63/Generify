@@ -6,15 +6,8 @@ using MoreLinq;
 
 namespace Generify.Services.Internal;
 
-public class PlaylistSyncWorker : IPlaylistSyncWorker
+public class PlaylistSyncWorker(IPlaylistEditService playlistEditService) : IPlaylistSyncWorker
 {
-    private readonly IPlaylistEditService _playlistEditService;
-
-    public PlaylistSyncWorker(IPlaylistEditService playlistEditService)
-    {
-        _playlistEditService = playlistEditService;
-    }
-
     public async Task SyncTracksAsync(PlaylistGenerationContext context)
     {
         TrackInfo[] toDelete = context.TargetTracks
@@ -25,8 +18,8 @@ public class PlaylistSyncWorker : IPlaylistSyncWorker
             .Where(s => !context.TargetTracks.Any(t => t.Id == s.Id))
             .ToArray();
 
-        await _playlistEditService.RemoveTracksFromPlaylistAsync(context.TargetPlaylist.Id, toDelete);
-        await _playlistEditService.AddTracksToPlaylistAsync(context.TargetPlaylist.Id, toAdd);
+        await playlistEditService.RemoveTracksFromPlaylistAsync(context.TargetPlaylist.Id, toDelete);
+        await playlistEditService.AddTracksToPlaylistAsync(context.TargetPlaylist.Id, toAdd);
 
         context.TargetTracks = context.TargetTracks
             .Except(toDelete)
@@ -44,7 +37,7 @@ public class PlaylistSyncWorker : IPlaylistSyncWorker
 
             if (curIndex != i)
             {
-                await _playlistEditService.ReorderTracksInPlaylistAsync(context.TargetPlaylist.Id, curIndex, i);
+                await playlistEditService.ReorderTracksInPlaylistAsync(context.TargetPlaylist.Id, curIndex, i);
 
                 context.TargetTracks = context.TargetTracks.Move(curIndex, 1, i).ToList();
             }

@@ -2,16 +2,9 @@
 
 namespace Generify.External.Settings;
 
-public class ExternalAuthSettings : IExternalAuthSettings
+public class ExternalAuthSettings(string clientId, string clientSecret, string callbackUrl) : IExternalAuthSettings
 {
-    public string ClientId { get; }
-    public string ClientSecret { get; }
-    public string CallbackUrl { get; }
-
-    public ExternalAuthSettings(string clientId, string clientSecret, string callbackUrl)
-    {
-        ClientId = clientId;
-        CallbackUrl = callbackUrl;
-        ClientSecret = clientSecret;
-    }
+    public string ClientId { get; } = clientId;
+    public string ClientSecret { get; } = clientSecret;
+    public string CallbackUrl { get; } = callbackUrl;
 }

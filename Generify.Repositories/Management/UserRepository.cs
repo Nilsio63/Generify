@@ -4,13 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Generify.Repositories.Management;
 
-public class UserRepository : BaseRepository<User>, IUserRepository
+public class UserRepository(GenerifyDataContext dataContext) : BaseRepository<User>(dataContext), IUserRepository
 {
-    public UserRepository(GenerifyDataContext dataContext)
-        : base(dataContext)
-    {
-    }
-
     public async Task<User?> GetBySpotifyIdAsync(string spotifyUserId)
     {
         return await BaseSelect

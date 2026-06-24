@@ -6,21 +6,14 @@ using SpotifyAPI.Web;
 
 namespace Generify.External.Internal;
 
-public class SpotifyClientFactory : ISpotifyClientFactory
+public class SpotifyClientFactory(
+    IExternalAuthSettings externalAuthSettings,
+    IUserContextAccessor userContextAccessor)
+    : ISpotifyClientFactory
 {
-    private readonly IExternalAuthSettings _externalAuthSettings;
-    private readonly IUserContextAccessor _userContextAccessor;
-
-    public SpotifyClientFactory(IExternalAuthSettings externalAuthSettings,
-        IUserContextAccessor userContextAccessor)
-    {
-        _externalAuthSettings = externalAuthSettings;
-        _userContextAccessor = userContextAccessor;
-    }
-
     public async Task<ISpotifyClient> CreateClientAsync()
     {
-        User? user = await _userContextAccessor.GetCurrentUserAsync();
+        User? user = await userContextAccessor.GetCurrentUserAsync();
 
         if (user is null)
         {
@@ -37,7 +30,7 @@ public class SpotifyClientFactory : ISpotifyClientFactory
             throw new ArgumentException($"'{nameof(refreshToken)}' cannot be null or whitespace", nameof(refreshToken));
         }
 
-        AuthorizationCodeRefreshResponse codeRefreshResponse = await new OAuthClient().RequestToken(new AuthorizationCodeRefreshRequest(_externalAuthSettings.ClientId, _externalAuthSettings.ClientSecret, refreshToken));
+        AuthorizationCodeRefreshResponse codeRefreshResponse = await new OAuthClient().RequestToken(new AuthorizationCodeRefreshRequest(externalAuthSettings.ClientId, externalAuthSettings.ClientSecret, refreshToken));
 
         SpotifyClientConfig clientConfig = SpotifyClientConfig
             .CreateDefault()

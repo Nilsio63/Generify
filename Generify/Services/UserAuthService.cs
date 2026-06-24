@@ -14,32 +14,22 @@ public interface IUserAuthService : IUserContextAccessor
     Task LogoutAsync();
 }
 
-public class UserAuthService : IUserAuthService
+public class UserAuthService(
+    AuthenticationStateProvider authStateProvider,
+    IHttpContextAccessor httpContextAccessor,
+    IUserService userService)
+    : IUserAuthService
 {
-    private readonly AuthenticationStateProvider _authStateProvider;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IUserService _userService;
-
-    public UserAuthService(
-        AuthenticationStateProvider authStateProvider,
-        IHttpContextAccessor httpContextAccessor,
-        IUserService userService)
-    {
-        _authStateProvider = authStateProvider;
-        _httpContextAccessor = httpContextAccessor;
-        _userService = userService;
-    }
-
     public async Task<bool> IsUserLoggedInAsync()
     {
-        AuthenticationState authState = await _authStateProvider.GetAuthenticationStateAsync();
+        AuthenticationState authState = await authStateProvider.GetAuthenticationStateAsync();
 
         return authState.User.Identity?.IsAuthenticated ?? false;
     }
 
     public async Task<User?> GetCurrentUserAsync()
     {
-        AuthenticationState authState = await _authStateProvider.GetAuthenticationStateAsync();
+        AuthenticationState authState = await authStateProvider.GetAuthenticationStateAsync();
 
         string? userId = authState.User.Identity?.Name;
 
@@ -48,24 +38,24 @@ public class UserAuthService : IUserAuthService
             return null;
         }
 
-        User? user = await _userService.GetByIdAsync(userId);
+        User? user = await userService.GetByIdAsync(userId);
 
         return user;
     }
 
     public async Task LoginAsync(User user)
     {
-        if (_httpContextAccessor.HttpContext is not null)
+        if (httpContextAccessor.HttpContext is not null)
         {
-            await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(GetClaimsIdentity(user)));
+            await httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(GetClaimsIdentity(user)));
         }
     }
 
     public async Task LogoutAsync()
     {
-        if (_httpContextAccessor.HttpContext is not null)
+        if (httpContextAccessor.HttpContext is not null)
         {
-            await _httpContextAccessor.HttpContext.SignOutAsync();
+            await httpContextAccessor.HttpContext.SignOutAsync();
         }
     }
 

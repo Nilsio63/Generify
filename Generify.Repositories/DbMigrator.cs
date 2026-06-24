@@ -8,31 +8,23 @@ public interface IDbMigrator
     Task MigrateAsync();
 }
 
-public class DbMigrator : IDbMigrator
+public class DbMigrator(
+    ILogger<DbMigrator> logger,
+    GenerifyDataContext dbContext)
+    : IDbMigrator
 {
-    private readonly ILogger<DbMigrator> _logger;
-    private readonly GenerifyDataContext _dbContext;
-
-    public DbMigrator(
-        ILogger<DbMigrator> logger,
-        GenerifyDataContext dbContext)
-    {
-        _logger = logger;
-        _dbContext = dbContext;
-    }
-
     public async Task MigrateAsync()
     {
-        IEnumerable<string> appliedMigrations = await _dbContext.Database.GetAppliedMigrationsAsync();
+        IEnumerable<string> appliedMigrations = await dbContext.Database.GetAppliedMigrationsAsync();
 
-        _logger.LogInformation("Applied migrations: {appliedMigrations}", appliedMigrations.DefaultIfEmpty("<None>").ToArray());
+        logger.LogInformation("Applied migrations: {appliedMigrations}", appliedMigrations.DefaultIfEmpty("<None>").ToArray());
 
-        IEnumerable<string> pendingMigrations = await _dbContext.Database.GetPendingMigrationsAsync();
+        IEnumerable<string> pendingMigrations = await dbContext.Database.GetPendingMigrationsAsync();
 
-        _logger.LogInformation("Pending migrations: {appliedMigrations}", pendingMigrations.DefaultIfEmpty("<None>").ToArray());
+        logger.LogInformation("Pending migrations: {appliedMigrations}", pendingMigrations.DefaultIfEmpty("<None>").ToArray());
 
-        await _dbContext.Database.MigrateAsync();
+        await dbContext.Database.MigrateAsync();
 
-        _logger.LogInformation("Migrated database successfully");
+        logger.LogInformation("Migrated database successfully");
     }
 }

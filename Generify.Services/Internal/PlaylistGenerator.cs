@@ -4,24 +4,17 @@ using Generify.Services.Internal.Models;
 
 namespace Generify.Services.Internal;
 
-public class PlaylistGenerator : IPlaylistGenerator
+public class PlaylistGenerator(
+    IPlaylistGenerationContextBuilder generationContextBuilder,
+    IPlaylistSyncWorker syncWorker)
+    : IPlaylistGenerator
 {
-    private readonly IPlaylistGenerationContextBuilder _generationContextBuilder;
-    private readonly IPlaylistSyncWorker _syncWorker;
-
-    public PlaylistGenerator(IPlaylistGenerationContextBuilder generationContextBuilder,
-        IPlaylistSyncWorker syncWorker)
-    {
-        _generationContextBuilder = generationContextBuilder;
-        _syncWorker = syncWorker;
-    }
-
     public async Task ExecuteGenerationAsync(PlaylistDefinition playlistDefinition)
     {
-        PlaylistGenerationContext context = await _generationContextBuilder.CreateContextAsync(playlistDefinition);
+        PlaylistGenerationContext context = await generationContextBuilder.CreateContextAsync(playlistDefinition);
 
-        await _syncWorker.SyncTracksAsync(context);
+        await syncWorker.SyncTracksAsync(context);
 
-        await _syncWorker.SyncSortingAsync(context);
+        await syncWorker.SyncSortingAsync(context);
     }
 }

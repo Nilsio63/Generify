@@ -4,19 +4,12 @@ using SpotifyAPI.Web;
 
 namespace Generify.External;
 
-public class LoginService : ILoginService
+public class LoginService(IExternalAuthSettings externalAuthSettings) : ILoginService
 {
-    private readonly IExternalAuthSettings _externalAuthSettings;
-
-    public LoginService(IExternalAuthSettings externalAuthSettings)
-    {
-        _externalAuthSettings = externalAuthSettings;
-    }
-
     public string GetExternalLoginUrl()
     {
-        var request = new LoginRequest(new Uri(_externalAuthSettings.CallbackUrl),
-            _externalAuthSettings.ClientId,
+        var request = new LoginRequest(new Uri(externalAuthSettings.CallbackUrl),
+            externalAuthSettings.ClientId,
             LoginRequest.ResponseType.Code)
         {
             Scope = new[] { Scopes.UserTopRead, Scopes.UserReadEmail, Scopes.UserLibraryRead, Scopes.UserFollowRead, Scopes.PlaylistModifyPrivate, Scopes.PlaylistModifyPublic }
@@ -28,7 +21,7 @@ public class LoginService : ILoginService
     public async Task<string> GetRefreshTokenAsync(string accessToken)
     {
         AuthorizationCodeTokenResponse response = await new OAuthClient().RequestToken(
-            new AuthorizationCodeTokenRequest(_externalAuthSettings.ClientId, _externalAuthSettings.ClientSecret, accessToken, new Uri(_externalAuthSettings.CallbackUrl)));
+            new AuthorizationCodeTokenRequest(externalAuthSettings.ClientId, externalAuthSettings.ClientSecret, accessToken, new Uri(externalAuthSettings.CallbackUrl)));
 
         return response.RefreshToken;
     }

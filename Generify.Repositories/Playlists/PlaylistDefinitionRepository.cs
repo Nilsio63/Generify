@@ -5,13 +5,8 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Generify.Repositories.Playlists;
 
-public class PlaylistDefinitionRepository : BaseRepository<PlaylistDefinition>, IPlaylistDefinitionRepository
+public class PlaylistDefinitionRepository(GenerifyDataContext dataContext) : BaseRepository<PlaylistDefinition>(dataContext), IPlaylistDefinitionRepository
 {
-    public PlaylistDefinitionRepository(GenerifyDataContext dataContext)
-        : base(dataContext)
-    {
-    }
-
     public async Task<List<PlaylistDefinition>> GetAllByUserIdAsync(string userId)
     {
         Guid userGuid = Guid.Parse(userId);

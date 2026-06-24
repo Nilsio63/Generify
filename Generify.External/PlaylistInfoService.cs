@@ -6,18 +6,11 @@ using System.Web;
 
 namespace Generify.External;
 
-public class PlaylistInfoService : IPlaylistInfoService
+public class PlaylistInfoService(ISpotifyClientFactory spotifyClientFactory) : IPlaylistInfoService
 {
-    private readonly ISpotifyClientFactory _spotifyClientFactory;
-
-    public PlaylistInfoService(ISpotifyClientFactory spotifyClientFactory)
-    {
-        _spotifyClientFactory = spotifyClientFactory;
-    }
-
     public async Task<PlaylistInfo?> GetPlaylistInfoAsync(string playlistId)
     {
-        ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
+        ISpotifyClient client = await spotifyClientFactory.CreateClientAsync();
 
         FullPlaylist playlist = await client.Playlists.Get(playlistId);
 
