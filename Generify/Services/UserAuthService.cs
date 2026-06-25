@@ -1,53 +1,69 @@
-﻿using Blazored.LocalStorage;
-using Generify.Models.Management;
+﻿using Generify.Models.Management;
 using Generify.Services.Abstractions.Management;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
+using System.Security.Claims;
 
 namespace Generify.Services;
 
-public class UserAuthService : IUserAuthService
+public interface IUserAuthService : IUserContextAccessor
 {
-    private readonly ILocalStorageService _localStorageService;
-    private readonly IGenerifyAuthenticationStateProvider _authStateProvider;
-    private readonly IUserService _userService;
+    Task<bool> IsUserLoggedInAsync();
+    Task LoginAsync(User user);
+    Task LogoutAsync();
+}
 
-    public UserAuthService(ILocalStorageService localStorageService,
-        IGenerifyAuthenticationStateProvider authStateProvider,
-        IUserService userService)
-    {
-        _localStorageService = localStorageService;
-        _authStateProvider = authStateProvider;
-        _userService = userService;
-    }
-
+public class UserAuthService(
+    AuthenticationStateProvider authStateProvider,
+    IHttpContextAccessor httpContextAccessor,
+    IUserService userService)
+    : IUserAuthService
+{
     public async Task<bool> IsUserLoggedInAsync()
     {
-        string? userId = await _localStorageService.GetItemAsync<string>("userId");
+        AuthenticationState authState = await authStateProvider.GetAuthenticationStateAsync();
 
-        return !string.IsNullOrWhiteSpace(userId);
+        return authState.User.Identity?.IsAuthenticated ?? false;
     }
 
     public async Task<User?> GetCurrentUserAsync()
     {
-        string? userId = await _localStorageService.GetItemAsync<string>("userId");
+        AuthenticationState authState = await authStateProvider.GetAuthenticationStateAsync();
+
+        string? userId = authState.User.Identity?.Name;
 
         if (string.IsNullOrWhiteSpace(userId))
         {
             return null;
         }
 
-        User? user = await _userService.GetByIdAsync(userId);
+        User? user = await userService.GetByIdAsync(userId);
 
         return user;
     }
 
     public async Task LoginAsync(User user)
     {
-        await _authStateProvider.SetAuthenticatedAsync(user);
+        if (httpContextAccessor.HttpContext is not null)
+        {
+            await httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(GetClaimsIdentity(user)));
+        }
     }
 
     public async Task LogoutAsync()
     {
-        await _authStateProvider.RemoveAuthenticatedAsync();
+        if (httpContextAccessor.HttpContext is not null)
+        {
+            await httpContextAccessor.HttpContext.SignOutAsync();
+        }
+    }
+
+    private static ClaimsIdentity GetClaimsIdentity(User user)
+    {
+        return new ClaimsIdentity(
+        [
+            new Claim(ClaimTypes.Name, user.Id.ToString())
+        ], CookieAuthenticationDefaults.AuthenticationScheme);
     }
 }

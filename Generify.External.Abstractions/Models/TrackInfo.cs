@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Generify.External.Abstractions.Models;
+﻿namespace Generify.External.Abstractions.Models;
 
 public class TrackInfo
 {

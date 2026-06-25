@@ -1,5 +1,4 @@
 ﻿using Generify.Services.Internal.Models;
-using System.Threading.Tasks;
 
 namespace Generify.Services.Internal.Interfaces;
 

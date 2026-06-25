@@ -4,17 +4,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Generify.Repositories;
 
-public class GenerifyDataContext : DbContext
+public class GenerifyDataContext(DbContextOptions options) : DbContext(options)
 {
     public DbSet<User> Users { get; set; }
     public DbSet<PlaylistDefinition> PlaylistDefinitions { get; set; }
     public DbSet<PlaylistSource> PlaylistSources { get; set; }
     public DbSet<OrderInstruction> OrderInstructions { get; set; }
-
-    public GenerifyDataContext(DbContextOptions options)
-        : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

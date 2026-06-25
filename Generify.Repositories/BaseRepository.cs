@@ -1,24 +1,15 @@
 ﻿using Generify.Models;
 using Generify.Repositories.Abstractions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Generify.Repositories;
 
-public abstract class BaseRepository<T> : IBaseRepository<T>
+public abstract class BaseRepository<T>(GenerifyDataContext dataContext) : IBaseRepository<T>
     where T : Entity
 {
     protected virtual IQueryable<T> BaseSelect => DataContext.Set<T>();
     protected DbSet<T> DbSet => DataContext.Set<T>();
-    protected GenerifyDataContext DataContext { get; }
-
-    public BaseRepository(GenerifyDataContext dataContext)
-    {
-        DataContext = dataContext;
-    }
+    protected GenerifyDataContext DataContext { get; } = dataContext;
 
     public async Task<List<T>> GetAllAsync()
     {

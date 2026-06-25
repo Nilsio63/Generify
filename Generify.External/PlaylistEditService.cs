@@ -3,50 +3,40 @@ using Generify.External.Abstractions.Services;
 using Generify.External.Internal.Interfaces;
 using MoreLinq;
 using SpotifyAPI.Web;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Generify.External;
 
-public class PlaylistEditService : IPlaylistEditService
+public class PlaylistEditService(ISpotifyClientFactory spotifyClientFactory) : IPlaylistEditService
 {
-    private readonly ISpotifyClientFactory _spotifyClientFactory;
-
-    public PlaylistEditService(ISpotifyClientFactory spotifyClientFactory)
-    {
-        _spotifyClientFactory = spotifyClientFactory;
-    }
-
     public async Task AddTracksToPlaylistAsync(string playlistId, IEnumerable<TrackInfo> tracks)
     {
-        ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
+        ISpotifyClient client = await spotifyClientFactory.CreateClientAsync();
 
         foreach (IEnumerable<TrackInfo> batch in tracks.Batch(100))
         {
-            await client.Playlists.AddItems(playlistId, new PlaylistAddItemsRequest(batch.Select(o => o.Uri).ToList()));
+            await client.Playlists.AddPlaylistItems(playlistId, new PlaylistAddItemsRequest([.. batch.Select(o => o.Uri)]));
         }
     }
 
     public async Task RemoveTracksFromPlaylistAsync(string playlistId, IEnumerable<TrackInfo> tracks)
     {
-        ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
+        ISpotifyClient client = await spotifyClientFactory.CreateClientAsync();
 
         foreach (IEnumerable<TrackInfo> batch in tracks.Batch(100))
         {
-            PlaylistRemoveItemsRequest req = new PlaylistRemoveItemsRequest
+            PlaylistRemoveItemsRequestV2 req = new PlaylistRemoveItemsRequestV2
             {
-                Tracks = batch.Select(o => new PlaylistRemoveItemsRequest.Item { Uri = o.Uri }).ToList()
+                Items = batch.Select(o => new PlaylistRemoveItemsRequestV2.Item { Uri = o.Uri }).ToList()
             };
 
-            await client.Playlists.RemoveItems(playlistId, req);
+            await client.Playlists.RemovePlaylistItems(playlistId, req);
         }
     }
 
     public async Task ReorderTracksInPlaylistAsync(string playlistId, int startIndex, int insertBeforeIndex)
     {
-        ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
+        ISpotifyClient client = await spotifyClientFactory.CreateClientAsync();
 
-        await client.Playlists.ReorderItems(playlistId, new PlaylistReorderItemsRequest(startIndex, insertBeforeIndex));
+        await client.Playlists.UpdatePlaylistItems(playlistId, new PlaylistReorderItemsRequest(startIndex, insertBeforeIndex));
     }
 }

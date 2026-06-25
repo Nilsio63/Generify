@@ -1,26 +1,15 @@
 ﻿using Generify.External.Abstractions.Models;
 using Generify.External.Abstractions.Services;
 using Generify.External.Internal.Interfaces;
-using MoreLinq;
 using SpotifyAPI.Web;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Generify.External;
 
-public class TrackInfoService : ITrackInfoService
+public class TrackInfoService(ISpotifyClientFactory spotifyClientFactory) : ITrackInfoService
 {
-    private readonly ISpotifyClientFactory _spotifyClientFactory;
-
-    public TrackInfoService(ISpotifyClientFactory spotifyClientFactory)
-    {
-        _spotifyClientFactory = spotifyClientFactory;
-    }
-
     public async Task<TrackInfo?> GetByIdAsync(string trackId)
     {
-        ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
+        ISpotifyClient client = await spotifyClientFactory.CreateClientAsync();
 
         FullTrack track = await client.Tracks.Get(trackId);
 
@@ -29,24 +18,22 @@ public class TrackInfoService : ITrackInfoService
 
     public async Task<List<TrackInfo>> GetByAlbumIdAsync(string albumId)
     {
-        ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
+        ISpotifyClient client = await spotifyClientFactory.CreateClientAsync();
 
         Paging<SimpleTrack> albumPaginate = await client.Albums.GetTracks(albumId);
 
         List<SimpleTrack> tracksFromAlbum = await client.Paginate(albumPaginate).ToListAsync();
 
         return await tracksFromAlbum
-            .Batch(50)
             .ToAsyncEnumerable()
-            .SelectAwait(async o => await client.Tracks.GetSeveral(new TracksRequest(o.Select(p => p.Id).ToList())))
-            .SelectMany(o => o.Tracks.ToAsyncEnumerable())
+            .Select(async (o, _, ct) => await client.Tracks.Get(o.Id, ct))
             .Select(Map)
             .ToListAsync();
     }
 
     public async Task<List<TrackInfo>> GetByArtistIdAsync(string artistId)
     {
-        ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
+        ISpotifyClient client = await spotifyClientFactory.CreateClientAsync();
 
         Paging<SimpleAlbum> albumPaginate = await client.Artists.GetAlbums(artistId);
 
@@ -54,10 +41,8 @@ public class TrackInfoService : ITrackInfoService
             .ToListAsync();
 
         List<FullAlbum> fullAlbumList = await simpleAlbumList
-            .Batch(20)
             .ToAsyncEnumerable()
-            .SelectAwait(async o => await client.Albums.GetSeveral(new AlbumsRequest(o.Select(p => p.Id).ToList())))
-            .SelectMany(o => o.Albums.ToAsyncEnumerable())
+            .Select(async (o, _, ct) => await client.Albums.Get(o.Id, ct))
             .ToListAsync();
 
         List<SimpleTrack> simpleTrackList = await fullAlbumList
@@ -66,19 +51,17 @@ public class TrackInfoService : ITrackInfoService
             .ToListAsync();
 
         return await simpleTrackList
-            .Batch(50)
             .ToAsyncEnumerable()
-            .SelectAwait(async o => await client.Tracks.GetSeveral(new TracksRequest(o.Select(p => p.Id).ToList())))
-            .SelectMany(o => o.Tracks.ToAsyncEnumerable())
+            .Select(async (o, _, ct) => await client.Tracks.Get(o.Id, ct))
             .Select(Map)
             .ToListAsync();
     }
 
     public async Task<List<TrackInfo>> GetByPlaylistIdAsync(string playlistId)
     {
-        ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
+        ISpotifyClient client = await spotifyClientFactory.CreateClientAsync();
 
-        Paging<PlaylistTrack<IPlayableItem>> playlistPaginate = await client.Playlists.GetItems(playlistId);
+        Paging<PlaylistTrack<IPlayableItem>> playlistPaginate = await client.Playlists.GetPlaylistItems(playlistId);
 
         return await client.Paginate(playlistPaginate)
             .Select(o => o.Track)
@@ -89,7 +72,7 @@ public class TrackInfoService : ITrackInfoService
 
     public async Task<List<TrackInfo>> GetFromLibraryAsync()
     {
-        ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
+        ISpotifyClient client = await spotifyClientFactory.CreateClientAsync();
 
         Paging<SavedTrack> libPaginate = await client.Library.GetTracks();
 

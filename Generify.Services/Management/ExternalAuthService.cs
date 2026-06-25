@@ -2,38 +2,27 @@
 using Generify.Models.Management;
 using Generify.Repositories.Abstractions.Management;
 using Generify.Services.Abstractions.Management;
-using System.Threading.Tasks;
 
 namespace Generify.Services.Management;
 
-public class ExternalAuthService : IExternalAuthService
+public class ExternalAuthService(
+    ILoginService loginService,
+    IUserInfoService userInfoService,
+    IUserRepository userRepo)
+    : IExternalAuthService
 {
-    private readonly ILoginService _loginService;
-    private readonly IUserInfoService _userInfoService;
-    private readonly IUserRepository _userRepo;
-
-    public ExternalAuthService(
-        ILoginService loginService,
-        IUserInfoService userInfoService,
-        IUserRepository userRepo)
-    {
-        _loginService = loginService;
-        _userInfoService = userInfoService;
-        _userRepo = userRepo;
-    }
-
     public string GetExternalLoginUrl()
     {
-        return _loginService.GetExternalLoginUrl();
+        return loginService.GetExternalLoginUrl();
     }
 
     public async Task<User> SaveAccessTokenAsync(string accessToken)
     {
-        string refreshToken = await _loginService.GetRefreshTokenAsync(accessToken);
+        string refreshToken = await loginService.GetRefreshTokenAsync(accessToken);
 
-        string spotifyUserId = await _userInfoService.GetSpotifyUserIdAsync(refreshToken);
+        string spotifyUserId = await userInfoService.GetSpotifyUserIdAsync(refreshToken);
 
-        User user = await _userRepo.GetBySpotifyIdAsync(spotifyUserId)
+        User user = await userRepo.GetBySpotifyIdAsync(spotifyUserId)
             ?? new()
             {
                 SpotifyId = spotifyUserId
@@ -41,7 +30,7 @@ public class ExternalAuthService : IExternalAuthService
 
         user.RefreshToken = refreshToken;
 
-        await _userRepo.SaveAsync(user);
+        await userRepo.SaveAsync(user);
 
         return user;
     }

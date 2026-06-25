@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Generify.Models;
+﻿namespace Generify.Models;
 
 public abstract class Entity
 {

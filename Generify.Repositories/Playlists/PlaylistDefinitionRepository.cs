@@ -2,20 +2,11 @@
 using Generify.Repositories.Abstractions.Playlists;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Generify.Repositories.Playlists;
 
-public class PlaylistDefinitionRepository : BaseRepository<PlaylistDefinition>, IPlaylistDefinitionRepository
+public class PlaylistDefinitionRepository(GenerifyDataContext dataContext) : BaseRepository<PlaylistDefinition>(dataContext), IPlaylistDefinitionRepository
 {
-    public PlaylistDefinitionRepository(GenerifyDataContext dataContext)
-        : base(dataContext)
-    {
-    }
-
     public async Task<List<PlaylistDefinition>> GetAllByUserIdAsync(string userId)
     {
         Guid userGuid = Guid.Parse(userId);

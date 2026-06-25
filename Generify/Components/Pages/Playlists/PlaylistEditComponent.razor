@@ -1,0 +1,136 @@
+﻿@inject NavigationManager _navManager
+@inject IPlaylistDefinitionService _playlistDefService
+
+@if (Playlist != null)
+{
+    <MudForm Model="Playlist">
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTextField @bind-Value="Playlist.TargetPlaylistId" Label="Target playlist id" />
+            </MudItem>
+
+            @foreach (PlaylistSource source in Playlist.PlaylistSources)
+            {
+                <MudItem xs="12" md="6" lg="4">
+                    <MudSelect @bind-Value="source.SourceType" Label="Source type">
+                        <MudSelectItem Value="Generify.Models.Enums.SourceType.Album">Album</MudSelectItem>
+                        <MudSelectItem Value="Generify.Models.Enums.SourceType.Artist">Artist</MudSelectItem>
+                        <MudSelectItem Value="Generify.Models.Enums.SourceType.Library">Library</MudSelectItem>
+                        <MudSelectItem Value="Generify.Models.Enums.SourceType.Playlist">Playlist</MudSelectItem>
+                        <MudSelectItem Value="Generify.Models.Enums.SourceType.Track">Track</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem xs="12" md="6" lg="4">
+                    <MudSelect @bind-Value="source.InclusionType" Label="Inclusion type">
+                        <MudSelectItem Value="Generify.Models.Enums.InclusionType.Include">Include</MudSelectItem>
+                        <MudSelectItem Value="Generify.Models.Enums.InclusionType.Exclude">Exclude</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem xs="11" md="5" lg="3">
+                    <MudTextField @bind-Value="source.SourceId" Label="Source id" />
+                </MudItem>
+
+                <MudItem xs="1">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => DeleteSource(source)" />
+                </MudItem>
+            }
+
+            <MudItem xs="12">
+                <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="AddSource">Add source</MudButton>
+            </MudItem>
+
+            @foreach (OrderInstruction orderInstruction in Playlist.OrderInstructions)
+            {
+                <MudItem xs="12" md="6">
+                    <MudSelect @bind-Value="orderInstruction.OrderType" Label="Order type">
+                        <MudSelectItem Value="Generify.Models.Enums.PlaylistOrderType.AlbumName">Album</MudSelectItem>
+                        <MudSelectItem Value="Generify.Models.Enums.PlaylistOrderType.ArtistName">Artist</MudSelectItem>
+                        <MudSelectItem Value="Generify.Models.Enums.PlaylistOrderType.Title">Title</MudSelectItem>
+                        <MudSelectItem Value="Generify.Models.Enums.PlaylistOrderType.TrackNr">Track No.</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem xs="11" md="5">
+                    <MudSelect @bind-Value="orderInstruction.OrderDirection" Label="Order direction">
+                        <MudSelectItem Value="Generify.Models.Enums.PlaylistOrderDirection.Ascending">Ascending</MudSelectItem>
+                        <MudSelectItem Value="Generify.Models.Enums.PlaylistOrderDirection.Descending">Descending</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+
+                <MudItem xs="1">
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => DeleteOrderInstruction(orderInstruction)" />
+                </MudItem>
+            }
+
+            <MudItem xs="12">
+                <MudButton StartIcon="@Icons.Material.Filled.Add" OnClick="AddOrderInstruction">Add order instruction</MudButton>
+            </MudItem>
+
+            <MudItem xs="12">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SaveAsync">Save</MudButton>
+            </MudItem>
+
+            @if (!string.IsNullOrWhiteSpace(_errorMessage))
+            {
+                <MudAlert Severity="Severity.Error">@_errorMessage</MudAlert>
+            }
+        </MudGrid>
+    </MudForm>
+}
+
+@code {
+    private string? _errorMessage = null;
+
+    [Parameter]
+    public PlaylistDefinition Playlist { get; set; } = new();
+
+    public async Task SaveAsync()
+    {
+        if (string.IsNullOrWhiteSpace(Playlist.TargetPlaylistId))
+        {
+            _errorMessage = "The target playlist id is required";
+            return;
+        }
+
+        foreach (PlaylistSource source in Playlist.PlaylistSources)
+        {
+            if (string.IsNullOrWhiteSpace(source.SourceId) && source.SourceType != Models.Enums.SourceType.Library)
+            {
+                _errorMessage = "The source id is required";
+                return;
+            }
+        }
+
+        await _playlistDefService.SaveAsync(Playlist);
+
+        _navManager.NavigateTo("/playlists");
+    }
+
+    public void AddSource()
+    {
+        Playlist.PlaylistSources.Add(new PlaylistSource
+        {
+            OrderNr = Playlist.PlaylistSources.Select(o => o.OrderNr).DefaultIfEmpty().Max() + 1
+        });
+    }
+
+    public void DeleteSource(PlaylistSource source)
+    {
+        Playlist.PlaylistSources.Remove(source);
+    }
+
+    public void AddOrderInstruction()
+    {
+        Playlist.OrderInstructions.Add(new OrderInstruction
+        {
+            OrderNr = Playlist.OrderInstructions.Select(o => o.OrderNr).DefaultIfEmpty().Max() + 1
+        });
+    }
+
+    public void DeleteOrderInstruction(OrderInstruction orderInstruction)
+    {
+        Playlist.OrderInstructions.Remove(orderInstruction);
+    }
+}

@@ -2,23 +2,15 @@
 using Generify.External.Abstractions.Services;
 using Generify.External.Internal.Interfaces;
 using SpotifyAPI.Web;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace Generify.External;
 
-public class PlaylistInfoService : IPlaylistInfoService
+public class PlaylistInfoService(ISpotifyClientFactory spotifyClientFactory) : IPlaylistInfoService
 {
-    private readonly ISpotifyClientFactory _spotifyClientFactory;
-
-    public PlaylistInfoService(ISpotifyClientFactory spotifyClientFactory)
-    {
-        _spotifyClientFactory = spotifyClientFactory;
-    }
-
     public async Task<PlaylistInfo?> GetPlaylistInfoAsync(string playlistId)
     {
-        ISpotifyClient client = await _spotifyClientFactory.CreateClientAsync();
+        ISpotifyClient client = await spotifyClientFactory.CreateClientAsync();
 
         FullPlaylist playlist = await client.Playlists.Get(playlistId);
 
@@ -28,7 +20,8 @@ public class PlaylistInfoService : IPlaylistInfoService
             {
                 Id = playlist.Id!,
                 Name = playlist.Name!,
-                Description = HttpUtility.HtmlDecode(playlist.Description)
+                Description = HttpUtility.HtmlDecode(playlist.Description),
+                ImageUrl = playlist.Images?.OrderByDescending(o => o.Height).FirstOrDefault()?.Url
             };
     }
 }

@@ -4,35 +4,24 @@ using Generify.Models.Enums;
 using Generify.Models.Playlists;
 using Generify.Services.Internal.Interfaces;
 using Generify.Services.Internal.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Generify.Services.Internal;
 
-public class PlaylistGenerationContextBuilder : IPlaylistGenerationContextBuilder
+public class PlaylistGenerationContextBuilder(
+    IPlaylistInfoService playlistInfoService,
+    ITrackInfoService trackInfoService)
+    : IPlaylistGenerationContextBuilder
 {
-    private readonly IPlaylistInfoService _playlistInfoService;
-    private readonly ITrackInfoService _trackInfoService;
-
-    public PlaylistGenerationContextBuilder(IPlaylistInfoService playlistInfoService,
-        ITrackInfoService trackInfoService)
-    {
-        _playlistInfoService = playlistInfoService;
-        _trackInfoService = trackInfoService;
-    }
-
     public async Task<PlaylistGenerationContext> CreateContextAsync(PlaylistDefinition playlistDefinition)
     {
         List<TrackInfo> sourceTracks = await GetFromSourcesAsync(playlistDefinition);
 
         sourceTracks = Sort(playlistDefinition, sourceTracks);
 
-        PlaylistInfo targetPlaylist = await _playlistInfoService.GetPlaylistInfoAsync(playlistDefinition.TargetPlaylistId)
+        PlaylistInfo targetPlaylist = await playlistInfoService.GetPlaylistInfoAsync(playlistDefinition.TargetPlaylistId)
             ?? throw new KeyNotFoundException($"Could not find playlist with id {playlistDefinition.TargetPlaylistId}");
 
-        List<TrackInfo> targetTracks = await _trackInfoService.GetByPlaylistIdAsync(targetPlaylist.Id);
+        List<TrackInfo> targetTracks = await trackInfoService.GetByPlaylistIdAsync(targetPlaylist.Id);
 
         return new PlaylistGenerationContext
         {
@@ -90,7 +79,7 @@ public class PlaylistGenerationContextBuilder : IPlaylistGenerationContextBuilde
         var sourceList = await playlistDefinition.PlaylistSources
             .ToAsyncEnumerable()
             .OrderBy(o => o.OrderNr)
-            .SelectAwait(async o => new
+            .Select(async (o, _, _) => new
             {
                 o.InclusionType,
                 Tracks = await GetFromSourceAsync(o)
@@ -129,27 +118,27 @@ public class PlaylistGenerationContextBuilder : IPlaylistGenerationContextBuilde
 
     private async Task<List<TrackInfo>> GetFromAlbumAsync(PlaylistSource source)
     {
-        return await _trackInfoService.GetByAlbumIdAsync(source.SourceId);
+        return await trackInfoService.GetByAlbumIdAsync(source.SourceId);
     }
 
     private async Task<List<TrackInfo>> GetFromArtistAsync(PlaylistSource source)
     {
-        return await _trackInfoService.GetByArtistIdAsync(source.SourceId);
+        return await trackInfoService.GetByArtistIdAsync(source.SourceId);
     }
 
     private async Task<List<TrackInfo>> GetFromLibraryAsync()
     {
-        return await _trackInfoService.GetFromLibraryAsync();
+        return await trackInfoService.GetFromLibraryAsync();
     }
 
     private async Task<List<TrackInfo>> GetFromPlaylistAsync(PlaylistSource source)
     {
-        return await _trackInfoService.GetByPlaylistIdAsync(source.SourceId);
+        return await trackInfoService.GetByPlaylistIdAsync(source.SourceId);
     }
 
     private async Task<List<TrackInfo>> GetFromTrackAsync(PlaylistSource source)
     {
-        TrackInfo? track = await _trackInfoService.GetByIdAsync(source.SourceId);
+        TrackInfo? track = await trackInfoService.GetByIdAsync(source.SourceId);
 
         if (track is not null)
         {

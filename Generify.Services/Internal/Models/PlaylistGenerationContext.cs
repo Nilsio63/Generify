@@ -1,5 +1,4 @@
 ﻿using Generify.External.Abstractions.Models;
-using System.Collections.Generic;
 
 namespace Generify.Services.Internal.Models;
 

@@ -1,0 +1,47 @@
+﻿@page "/playlists"
+@attribute [Authorize]
+@inject IUserAuthService _userAuthService
+@inject IPlaylistOverviewService _playlistOverviewService
+
+<PageTitle>My Playlists</PageTitle>
+
+<MudText Typo="Typo.h3">My Playlists</MudText>
+
+<LoadingComponent IsLoading="_isLoading">
+    <MudGrid>
+        @foreach (PlaylistOverview playlist in PlaylistDefinitions ?? [])
+        {
+            <MudItem xs="12" lg="6">
+                <PlaylistDisplayComponent Playlist="@playlist" />
+            </MudItem>
+        }
+
+        <MudItem xs="12">
+            <MudFab Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" Href="/playlists/create" />
+        </MudItem>
+    </MudGrid>
+</LoadingComponent>
+
+@code {
+    private bool _isLoading = true;
+    public List<PlaylistOverview> PlaylistDefinitions { get; set; } = [];
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _isLoading = true;
+
+            User? user = await _userAuthService.GetCurrentUserAsync();
+
+            if (user is not null)
+            {
+                PlaylistDefinitions = await _playlistOverviewService.GetAllByUserIdAsync(user.Id.ToString());
+            }
+
+            _isLoading = false;
+
+            StateHasChanged();
+        }
+    }
+}
