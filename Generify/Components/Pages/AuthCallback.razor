@@ -1,57 +1,37 @@
 ﻿@page "/authCallback"
-@using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.AspNetCore.Components.Authorization
 @inject NavigationManager _navManager
 @inject IExternalAuthService _externalAuthService
 @inject IUserAuthService _userAuthService
 
 <PageTitle>Auth Callback</PageTitle>
 
-@if (string.IsNullOrWhiteSpace(ErrorMessage))
-{
-    <MudText Typo="Typo.h3" GutterBottom="true">Authentication granted</MudText>
+<AuthorizeView>
+    <Authorized>
+        <MudText Typo="Typo.h3" GutterBottom="true">Authentication granted</MudText>
 
-    <MudText Typo="Typo.body1" Class="mb-8">
-        Congratulations! You managed to press on a button!<br />
-        Your Generify and Spotify accounts are now linked, meaning you will be able to generate some awesome playlists very soon!
-    </MudText>
-}
-else
-{
-    <MudText Typo="Typo.h3" GutterBottom="true">Authentication denied</MudText>
+        <MudText Typo="Typo.body1" Class="mb-8">
+            Congratulations! You managed to press on a button!<br />
+            Your Generify and Spotify accounts are now linked, meaning you will be able to generate some awesome playlists very soon!
+        </MudText>
+    </Authorized>
+    <NotAuthorized>
+        <MudText Typo="Typo.h3" GutterBottom="true">Authentication denied</MudText>
 
-    <MudText Typo="Typo.body1" Class="mb-8">
-        Something went wrong in the authentication process with Spotify.<br />
-        Might be a Spotify problem or you pressed the wrong button ...<br />
-        My guess: Probably your fault!
-    </MudText>
+        <MudText Typo="Typo.body1" Class="mb-8">
+            Something went wrong in the authentication process with Spotify.<br />
+            Might be a Spotify problem or you pressed the wrong button ...<br />
+            My guess: Probably your fault!
+        </MudText>
 
-    <MudAlert Severity="Severity.Error">@ErrorMessage</MudAlert>
-}
+        @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+        {
+            <MudAlert Severity="Severity.Error">@ErrorMessage</MudAlert>
+        }
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
+    [SupplyParameterFromQuery(Name = "error")]
     public string? ErrorMessage { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        if (await _userAuthService.IsUserLoggedInAsync())
-        {
-            return;
-        }
-
-        Uri uri = _navManager.ToAbsoluteUri(_navManager.Uri);
-
-        string? code = QueryHelpers.ParseQuery(uri.Query).TryGetValue("code", out var c) ? c.First() : null;
-        string? error = QueryHelpers.ParseQuery(uri.Query).TryGetValue("error", out var e) ? e.First() : null;
-
-        if (!string.IsNullOrWhiteSpace(code))
-        {
-            User user = await _externalAuthService.SaveAccessTokenAsync(code);
-
-            await _userAuthService.LoginAsync(user);
-        }
-        else
-        {
-            ErrorMessage = error;
-        }
-    }
 }

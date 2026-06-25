@@ -38,9 +38,9 @@ builder.Services.AddGenerifyServices();
 
 builder.Services.AddExternalServices(s =>
 {
-    NavigationManager navManager = s.GetRequiredService<NavigationManager>();
+    HttpContext httpContext = s.GetRequiredService<IHttpContextAccessor>().HttpContext!;
 
-    string hostAddress = navManager.BaseUri.ToString().Replace("https://", "").Replace("localhost", "127.0.0.1").TrimEnd('/');
+    string hostAddress = httpContext.Request.Host.ToString().Replace("https://", "").Replace("localhost", "127.0.0.1").TrimEnd('/');
 
     string? clientId = builder.Configuration
         .GetSection("Generify")
@@ -57,7 +57,7 @@ builder.Services.AddExternalServices(s =>
         throw new ArgumentException("Client ID or Client Secret missing in configuration");
     }
 
-    return new ExternalAuthSettings(clientId, clientSecret, $"https://{hostAddress}/authCallback");
+    return new ExternalAuthSettings(clientId, clientSecret, $"https://{hostAddress}/api/auth/authCallback");
 });
 
 // Add web dependencies
